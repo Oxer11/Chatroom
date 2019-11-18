@@ -17,6 +17,18 @@ def send(msg):
     print('send:', msg)
 
 
+def log_in():
+    send('\r\n'.join([str(LOGIN), input('username: '), input('password: ')]))
+
+
+def register():
+    user, pwd, re_pwd = input('username: '), input('password: '), input('repeat password: ')
+    if pwd == re_pwd:
+        send('\r\n'.join([str(REGISTER), user, pwd]))
+    else:
+        print('Password is inconsistent!')
+
+
 def send_msg():
     send_data, receiver = [str(SENDMSG)], []
     cur = input('receiver: ')
@@ -36,12 +48,26 @@ def send_all():
     send('\r\n'.join(send_data))
 
 
+def ask_users():
+    send(str(ASKUSERS))
+
+
+def log_out():
+    send(str(LOGOUT))
+
+
 def close():
     sock.close()
     sys.exit()
 
 
-handle_dic = {SENDMSG: send_msg, SENDALL: send_all, CLOSE: close}
+handle_dic = {LOGIN: log_in,
+              REGISTER: register,
+              SENDMSG: send_msg,
+              SENDALL: send_all,
+              LOGOUT: log_out,
+              ASKUSERS: ask_users,
+              CLOSE: close}
 
 
 def listener():
