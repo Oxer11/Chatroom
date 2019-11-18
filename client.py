@@ -4,6 +4,9 @@ import select
 import threading
 
 from Constant import *
+from chat_page import *
+from PyQt5.QtWidgets import QApplication, QWidget
+from loginwindow import *
 
 
 HOST = '127.0.0.1'
@@ -18,7 +21,9 @@ def send(msg):
 
 
 def log_in():
-    send('\r\n'.join([str(LOGIN), input('username: '), input('password: ')]))
+    username = ui_login.id_box.text()
+    password = ui_login.password_box.text()
+    send('\r\n'.join([str(LOGIN), username, password]))
 
 
 def register():
@@ -42,10 +47,9 @@ def send_msg():
 
 
 def send_all():
-    send_data = [str(SENDALL)]
-    data = input('message: ')
-    send_data.append(data)
-    send('\r\n'.join(send_data))
+    data = ui_chat.textEdit.toPlainText()
+    ui_chat.APPEND.emit('I say:\n' + data)
+    send(str(SENDALL) + '\r\n' + data)
 
 
 def ask_users():
@@ -76,22 +80,31 @@ def listener():
         r, w, e = select.select([sock], [], [])
         for s in r:
             try:
-                recv_data = s.recv(BUFFER_SIZE)
-                print('Receive:', recv_data.decode('utf-8'))
+                recv_data = s.recv(BUFFER_SIZE).decode('utf-8')
+                print('Receive:', recv_data)
+                data = recv_data.split('\r\n')
+                op = int(data[0])
+                if op == LOGIN_SUCCESS:
+                    ui_login.CLOSE.emit()
+                    ui_chat.SHOW.emit()
+                    ask_users()
+                elif op == LOGIN_WRONG:
+                    print('Login Error')
+                elif op == LOGIN_REPEAT:
+                    print('Login Repeat')
+                elif op == LOGIN_INFO:
+                    ui_chat.APPEND.emit(data[1] + ' has logged in!')
+                    ask_users()
+                elif op == LOGOUT_INFO:
+                    ui_chat.APPEND.emit(data[1] + ' has logged out!')
+                    ask_users()
+                elif op == SEND_ALL:
+                    ui_chat.APPEND.emit(data[1] + ' says:\n' + data[2])
+                elif op == ASKUSERS_RET:
+                    ui_chat.ask_users.emit(data[2])
             except Exception as e:
                 print(e)
                 return
-
-
-def action():
-    while True:
-        # Request
-        op = input('Operation Type: ')
-        try:
-            handle_dic[int(op)]()
-        except Exception:
-            print('Please input a valid type number.')
-            continue
 
 
 if __name__ == '__main__':
@@ -102,8 +115,23 @@ if __name__ == '__main__':
     except Exception as e:
         print("Fail to connect (%s, %s) due to" % (HOST, PORT), e)
         exit()
+
+    app = QApplication(sys.argv)
+    ui_login = LoginPage()
+    ui_login.login_button.clicked.connect(log_in)
+    ui_login.login_button.clicked.connect(ui_login.id_box.clear)
+    ui_login.login_button.clicked.connect(ui_login.password_box.clear)
+
+    ui_chat = ChatPage()
+    ui_chat.pushButton.clicked.connect(send_all)
+    ui_chat.pushButton.clicked.connect(ui_chat.textEdit.clear)
+
     listen = threading.Thread(target=listener, args=(), daemon=True)
     listen.start()
-    action()
+
+    ui_login.show()  # 这个用了才能展示界面
+    app.exec_()
+
+    # action()
     sock.close()
     sys.exit()
