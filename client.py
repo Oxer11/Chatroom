@@ -4,9 +4,11 @@ import select
 import threading
 
 from Constant import *
-from chat_page import *
+#from chat_page import *
 from PyQt5.QtWidgets import QApplication, QWidget
 from loginwindow import *
+from chatwindow import *
+import time
 
 
 HOST = '127.0.0.1'
@@ -16,20 +18,21 @@ BUFFER_SIZE = 1024
 
 def send(msg):
     msg = msg.encode('utf-8')
-    sock.sendall(msg)
+    sock.sendall(msg) #通过这个套接字将信息全部发送出去
     print('send:', msg)
 
 
 def log_in():
+    
     username = ui_login.id_box.text()
     password = ui_login.password_box.text()
-    send('\r\n'.join([str(LOGIN), username, password]))
+    send('\r\n'.join([str(LOGIN), username, password])) #发送登录信息
 
 
 def register():
     user, pwd, re_pwd = input('username: '), input('password: '), input('repeat password: ')
     if pwd == re_pwd:
-        send('\r\n'.join([str(REGISTER), user, pwd]))
+        send('\r\n'.join([str(REGISTER), user, pwd])) #发送注册信息
     else:
         print('Password is inconsistent!')
 
@@ -130,6 +133,7 @@ if __name__ == '__main__':
     listen.start()
 
     ui_login.show()  # 这个用了才能展示界面
+    #ui_chat.show()
     app.exec_()
 
     # action()
