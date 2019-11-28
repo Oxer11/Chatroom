@@ -94,22 +94,37 @@ class Ui_chatWindow(object):
                     font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
         # self.textEdit.setMaximumSize(QtCore.QSize(16777215, 70))
         self.textEdit.setObjectName("conversation_input_0")
-        # self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 1)
+
+        _translate = QtCore.QCoreApplication.translate
+
         self.pushButton = QtWidgets.QPushButton(Form)
-        # self.pushButton.setMaximumSize(QtCore.QSize(16777215, 70))
-        self.pushButton.setGeometry(QRect(width * 0.83, height * 0.8, width * 0.15, height * 0.18))
+        self.pushButton.setGeometry(QRect(width * 0.83, height * 0.84, width * 0.15, height * 0.14))
         self.pushButton.setStyleSheet("border-radius:10px;background-color:rgba(126,126,126,{0});\
                     font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
         self.pushButton.setObjectName("conversation_pushButton_0")
+        self.pushButton.setCursor(Qt.OpenHandCursor)
+        self.pushButton.setText(_translate("Form", "ENTER"))  # 调试
+
+        self.uploadButton = QtWidgets.QPushButton(Form)
+        self.uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.15, height * 0.03))
+        self.uploadButton.setStyleSheet("border-radius:6px;background-color:rgba(126,126,126,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        self.uploadButton.setObjectName("conversation_uploadButton_0")
+        self.uploadButton.setCursor(Qt.OpenHandCursor)
+        self.uploadButton.clicked.connect(self.upload_file)
+        self.uploadButton.setText(_translate("Form", "UPLOAD FILE"))
 
         QtCore.QMetaObject.connectSlotsByName(Form)
 
         self.create_userlist_label()
         self.create_chatlist_label()
 
-        _translate = QtCore.QCoreApplication.translate
+        
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.pushButton.setText(_translate("Form", "ENTER"))  # 调试
+        
+
+    def upload_file(self):
+        openfile_name = QFileDialog.getOpenFileName(self,'选择文件','')
 
     def create_userlist_label(self):
         _translate = QtCore.QCoreApplication.translate
@@ -119,7 +134,7 @@ class Ui_chatWindow(object):
         self.userlist = []
         for i in range(10):
             icon_button = QtWidgets.QPushButton(self.Form)
-            icon_button.setStyleSheet("QPushButton{border-image: url('./images/dark_star');}")
+            icon_button.setStyleSheet("QPushButton{border-radius:10px;border-image: url('./images/dark_star');}")
             icon_button.setCursor(Qt.OpenHandCursor)
             icon_button.setObjectName("user_icon_{0}".format(i))
             icon_button.setGeometry(QRect(width * 0.845, height * (0.04 + i * width/height * 0.05 ), width * 0.045, width * 0.045))
@@ -143,7 +158,7 @@ class Ui_chatWindow(object):
         self.chatlist = []
         for i in range(10):
             icon_button = QtWidgets.QPushButton(self.Form)
-            icon_button.setStyleSheet("QPushButton{border-image: url('./images/dark_star');}")
+            icon_button.setStyleSheet("QPushButton{border-radius:10px;border-image: url('./images/dark_star');}")
             icon_button.setCursor(Qt.OpenHandCursor)
             icon_button.setObjectName("chat_icon_{0}".format(i))
             icon_button.setGeometry(QRect(width * 0.015, height * (0.035 + i * width/height * 0.06 ), width * 0.06, width * 0.06))
@@ -184,6 +199,9 @@ class Ui_chatWindow(object):
         height = self.height()
         opaque = self.opaque
         Form = self.Form
+        icon_path_0 = photo_base_path + userid + ".png"
+        icon_path_1 = photo_base_path + self.clientId + ".png"
+
 
         textBrowser_00 = QtWidgets.QTextBrowser(Form)
         textBrowser_00.setObjectName("conversation_" + userid)
@@ -207,17 +225,39 @@ class Ui_chatWindow(object):
         # self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 1)
         pushButton_11 = QtWidgets.QPushButton(Form)
         # self.pushButton.setMaximumSize(QtCore.QSize(16777215, 70))
-        pushButton_11.setGeometry(QRect(width * 0.83, height * 0.8, width * 0.15, height * 0.18))
+        pushButton_11.setGeometry(QRect(width * 0.83, height * 0.84, width * 0.15, height * 0.14))
         pushButton_11.setStyleSheet("border-radius:10px;background-color:rgba(255,255,255,{0});\
                     font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
         pushButton_11.setObjectName("conversation_pushButton_"+userid)
         pushButton_11.setText(_translate("Form", "ENTER"))
+        pushButton_11.setCursor(Qt.OpenHandCursor)
+
+        uploadButton = QtWidgets.QPushButton(Form)
+        uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.15, height * 0.03))
+        uploadButton.setStyleSheet("border-radius:6px;background-color:rgba(255,255,255,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        uploadButton.setObjectName("conversation_uploadButton_0")
+        uploadButton.setCursor(Qt.OpenHandCursor)
+        uploadButton.clicked.connect(self.upload_file)
+        uploadButton.setText(_translate("Form", "UPLOAD FILE"))
+
+        icon_button_0 = QtWidgets.QPushButton(self.Form)
+        icon_button_0.setStyleSheet("QPushButton{border-radius:10px;border-image: url("+icon_path_0+");}")
+        icon_button_0.setCursor(Qt.OpenHandCursor)
+        icon_button_0.setObjectName("conversation_icon_0_{0}".format(userid))
+        icon_button_0.setGeometry(QRect(width * 0.84, height * 0.05, width * 0.13, width * 0.13))
+
+        icon_button_1 = QtWidgets.QPushButton(self.Form)
+        icon_button_1.setStyleSheet("QPushButton{border-radius:10px;border-image: url("+icon_path_1+");}")
+        icon_button_1.setCursor(Qt.OpenHandCursor)
+        icon_button_1.setObjectName("conversation_icon_1_{0}".format(userid))
+        icon_button_1.setGeometry(QRect(width * 0.84, height * 0.58, width * 0.13, width * 0.13))
 
         textBrowser_00.hide()
         textBrowser_01.hide()
         textEdit_10.hide()
         pushButton_11.hide()
-        return [textBrowser_00, textBrowser_01, textEdit_10, pushButton_11]
+        return [textBrowser_00, textBrowser_01, textEdit_10, pushButton_11,uploadButton,icon_button_0,icon_button_1]
 
 
 class ChatPage(QWidget, Ui_chatWindow):
@@ -263,7 +303,7 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.user_peoplelist = []
 
         self.cur_pageid = 0
-        page = [self.textBrowser_2, self.textBrowser, self.textEdit, self.pushButton]
+        page = [self.textBrowser_2, self.textBrowser, self.textEdit, self.pushButton, self.uploadButton]
         for item in self.userlist:
             for button in item[1:]:
                 page.append(button)
@@ -318,9 +358,10 @@ class ChatPage(QWidget, Ui_chatWindow):
         btn_idx = int(name.split('_')[-1])
         self.conv_list.pop(btn_idx)
         self.conv_people.pop(btn_idx)
-        self.conv_pages.pop(btn_idx)
+        
         self.update_chatlist()
         self.flush_page(0)
+        self.conv_pages.pop(btn_idx)
 
     def update_userlist(self, data):
         _translate = QtCore.QCoreApplication.translate
@@ -362,7 +403,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             icon_path = photo_base_path + userid + ".png"
             if self.cur_pageid == 0:
                 self.userlist[i][2].setText(_translate("Form", userid))
-                self.userlist[i][1].setStyleSheet("QPushButton{border-image: url('"+icon_path+"');}")
+                self.userlist[i][1].setStyleSheet("QPushButton{border-radius:10px;border-image: url('"+icon_path+"');}")
                 self.userlist[i][1].show()
                 self.userlist[i][2].show()
 
@@ -390,7 +431,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             messagenum_label = self.chatlist[i][3]
             close_button = self.chatlist[i][4]
             userid_button.setText(_translate("Form", userid))
-            icon_button.setStyleSheet("QPushButton{border-image: url("+icon_path+");}")
+            icon_button.setStyleSheet("QPushButton{border-radius:10px;border-image: url("+icon_path+");}")
             messagenum_label.setText(_translate("Form", '  '+str(messagenum)))
             icon_button.show()
             userid_button.show()
@@ -409,6 +450,8 @@ class ChatPage(QWidget, Ui_chatWindow):
         midfix = name.split('_')[1]
         if prefix == 'user':
             username = self.userlist[btn_idx][0]  # 用户名
+            if username == self.clientId:
+                return
             if username not in self.conv_people:
                 chatnum = len(self.conv_people)
                 self.conv_people.append(username)
@@ -438,6 +481,7 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.flush_page(chat_index)
 
     def flush_page(self, chat_index):
+        #print('?? cur_pageid',self.conv_pages,self.cur_pageid)
         for item in self.conv_pages[self.cur_pageid]:
             item.hide()
 
@@ -445,13 +489,16 @@ class ChatPage(QWidget, Ui_chatWindow):
             for item in self.conv_pages[chat_index]:
                 item.show()
         else:
-            for item in self.conv_pages[chat_index][:4]:
+            for item in self.conv_pages[chat_index][:5]:
                 item.show() 
             for items in self.userlist[:len(self.user_peoplelist)-1]:
                 for item in items[1:3]:
                     item.show()
 
         self.cur_pageid = chat_index
+
+    def setClientId(self,clientId):
+        self.clientId = clientId
 
 
 

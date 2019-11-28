@@ -90,7 +90,7 @@ def log_out(s, data):
 def ask_users(s, data):
     user = conn2user[s]
     users = list(user2conn.keys())
-    users.remove(user)
+    #users.remove(user)
     s.sendall('\r\n'.join([str(ASKUSERS_RET), str(len(user2conn.keys())), '\n'.join(users)]).encode('utf-8'))
 
 

@@ -26,7 +26,9 @@ def listener():
                 data = recv_data.split('\r\n')
                 op = int(data[0])
                 if op == LOGIN_SUCCESS:
+                    ui_chat.setClientId(ui_login.clientId)
                     ui_login.CLOSE.emit()
+                    ui_login.ui_register.CLOSE.emit()
                     ui_chat.SHOW.emit()
                     ask_users(sock)
                 elif op == LOGIN_WRONG:
