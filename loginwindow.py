@@ -8,13 +8,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import *
-from PyQt5.QtCore import * 
-from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.Qt import *
+from Constant import *
+from util import *
 import cgitb
-import time
-import client
+
 
 login_height = 300
 login_width = 425
@@ -22,7 +20,7 @@ background_path = "./images/star.jpg"
 tiancao_path = "./images/tiancao.png"
 star_path = "./images/little_star.png"
 darkstar_path = "./images/dark_star.png"
-cgitb.enable(format = 'text')
+cgitb.enable(format='text')
 
 
 class star(QObject):
@@ -50,6 +48,7 @@ class star(QObject):
 
     pos = pyqtProperty(QPointF, fset = _set_pos)
     rotation = pyqtProperty(QPointF, fset = _set_rotation)
+
 
 class Ui_loginWindow(object):
 
@@ -156,11 +155,11 @@ class Ui_loginWindow(object):
 
 class LoginPage(QWidget, Ui_loginWindow):
     CLOSE = QtCore.pyqtSignal()
-    
 
-    def __init__(self, parent=None):
+    def __init__(self, sock, parent=None):
         super(LoginPage, self).__init__(parent)
         self.setupUi(self) # 可以在外部调用这个LoginPage的CLOSE信号
+        self.sock = sock
         self.CLOSE.connect(self.close)
         background_palette = QPalette()
         background_pixmap = QPixmap(background_path).scaled(self.width(),self.height())
@@ -185,6 +184,14 @@ class LoginPage(QWidget, Ui_loginWindow):
         self.close_button.setGeometry(QRect(login_width * 0.88, login_height * 0.02, login_width * 0.1, login_width * 0.1))
         self.close_button.clicked.connect(self.CLOSE)
 
+        self.login_button.clicked.connect(self.log_in)
+        self.login_button.clicked.connect(self.id_box.clear)
+        self.login_button.clicked.connect(self.password_box.clear)
+
+    def log_in(self):
+        username = self.id_box.text()
+        password = self.password_box.text()
+        send(self.sock, '\r\n'.join([str(LOGIN), username, password]))  # 发送登录信息
 
     def paintEvent(self, e):
         qp = QPainter()
