@@ -4,9 +4,10 @@ import select
 import sqlite3
 import time
 from Constant import *
+from util import receive_file
 
 HOST = '127.0.0.1'
-PORT = 9058
+PORT = 9068
 BUFFER_SIZE = 4096
 
 
@@ -27,18 +28,6 @@ def log_in(s, data):
     else:
         user2conn.update({user[0]: s})  # 将这个人的用户名和对应的处理套接字加入字典
         conn2user.update({s: user[0]})  # 反之亦然
-        count = 0
-        i = 0
-        j = 0
-        top = 27000000
-        ''' 测试时这个太慢了
-		while( i < top):
-			while( j < top):
-				count = (count + 1) % 1000
-				j+=1
-				#print(count)
-			i+=1
-		'''
         s.sendall(str(LOGIN_SUCCESS).encode('utf-8'))
         broadcast(s, str(LOGIN_INFO) + '\r\n' + user[0])  # 由发送者s向所有套接字发送信息 说明这个人登录了
 
@@ -90,12 +79,38 @@ def log_out(s, data):
 def ask_users(s, data):
     user = conn2user[s]
     users = list(user2conn.keys())
-    #users.remove(user)
+    # users.remove(user)
     s.sendall('\r\n'.join([str(ASKUSERS_RET), str(len(user2conn.keys())), '\n'.join(users)]).encode('utf-8'))
 
 
+def send_file_all(s, data):
+    file_name, file_size, cur_data = receive_file(s, data)
+    broadcast(s, str(SENDFILE_ALL) + '\r\n' + conn2user[s] + '\r\n' + file_name + '\r\n' + file_size)
+
+
+def send_file(sender, data):
+    sep = '\r\n'.encode('utf-8')
+    receiver, data = data[:data.find(sep)], data[data.find(sep)+2:]
+    file_name, file_size, cur_data = receive_file(sender, data)
+    receiver = receiver.decode('utf-8').split('\t')
+    rec = []
+    for r in receiver:  # 向这些人发送信息 先看看数据库里有没有
+        cursor.execute("select * from user where username = '{0}'".format(r))
+        user = cursor.fetchone()
+        if user is None:
+            sender.sendall(str(SENDFILE_ERROR).encode('utf-8'))  # 在发送者的套接字上发送 发送信息错误
+        else:
+            try:
+                s = user2conn[user[0]]
+                rec.append(s)
+            except KeyError:
+                sender.sendall(str(SENDFILE_ERROR).encode('utf-8'))
+    for s in rec:  # rec是所有合法的收信者
+        if s != sock:
+            s.sendall((str(SENDFILE_PER) + '\r\n' + conn2user[sender] + '\r\n' + file_name + '\r\n' + file_size).encode('utf-8'))
+
+
 def close(s, data):
-    print('line 86 close ', s.getpeername())
     user = conn2user[s]
     if user is not None:
         broadcast(s, str(LOGOUT_INFO) + '\r\n' + user)
@@ -111,15 +126,19 @@ handle_dic = {LOGIN: log_in,
               SENDALL: send_all,
               LOGOUT: log_out,
               ASKUSERS: ask_users,
+              SENDFILEALL: send_file_all,
+              SENDFILE: send_file,
               CLOSE: close}
 
 
 def handle(s, data):  # 处理收到的信息
-    sec = data.split('\r\n')
-    print('line 107 ', sec)
+    sec = data[:10].decode('utf-8').split('\r\n')
     try:
-        print('line 109 function', int(sec[0]), handle_dic[int(sec[0])])
-        handle_dic[int(sec[0])](s, sec[1:])
+        if int(sec[0]) in [SENDFILEALL, SENDFILE]:
+            handle_dic[int(sec[0])](s, data[3:])
+        else:
+            sec = data.decode('utf-8').split('\r\n')
+            handle_dic[int(sec[0])](s, sec[1:])
     # handle_dic查找对应的函数
     except Exception as e:
         print(e)
@@ -142,20 +161,17 @@ if __name__ == '__main__':
     conn2user = {}
     user2conn = {}
     connections = set([sock])
-    # print('connections ',connections)
     while True:
         r, w, e = select.select(list(connections), [], [])
         for s in r:
             if s == sock:
                 conn, addr = s.accept()  # sock接受一个连接 记录其套接字conn
-                print("line 138 new connection", addr)
                 connections.add(conn)
                 # print('connections ',connections,conn)
                 conn2user[conn] = None
             else:
                 try:
-                    print('line 144 try')
-                    data = s.recv(BUFFER_SIZE).decode('utf-8')
+                    data = s.recv(BUFFER_SIZE)
                     assert len(data) > 0, 'receive empty message'
                     handle(s, data)
                 except Exception as e:

@@ -11,7 +11,7 @@ from util import *
 
 
 HOST = '127.0.0.1'
-PORT = 9058
+PORT = 9068
 BUFFER_SIZE = 1024
 
 
@@ -44,9 +44,15 @@ def listener():
                 elif op == SEND_ALL:
                     ui_chat.APPEND.emit(data[1] + ' says:\n' + data[2])
                 elif op == SEND_PER:
-                    ui_chat.new_conv.emit(data[1], data[2])
+                    ui_chat.new_conv.emit(data[1], ' says:\n' + data[2])
+                elif op == SENDFILE_ALL:
+                    ui_chat.APPEND.emit(data[1] + ' uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
+                elif op == SENDFILE_PER:
+                    ui_chat.new_conv.emit(data[1], 'uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
                 elif op == ASKUSERS_RET:
                     ui_chat.ask_users.emit(data[2])
+                elif op == REGISTER_SUCCESS:
+                    ui_login.ui_register.CLOSE.emit()
             except Exception as e:
                 print(e)
                 return

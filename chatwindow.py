@@ -111,7 +111,6 @@ class Ui_chatWindow(object):
                     font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
         self.uploadButton.setObjectName("conversation_uploadButton_0")
         self.uploadButton.setCursor(Qt.OpenHandCursor)
-        self.uploadButton.clicked.connect(self.upload_file)
         self.uploadButton.setText(_translate("Form", "UPLOAD FILE"))
 
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -121,10 +120,6 @@ class Ui_chatWindow(object):
 
         
         Form.setWindowTitle(_translate("Form", "Form"))
-        
-
-    def upload_file(self):
-        openfile_name = QFileDialog.getOpenFileName(self,'选择文件','')
 
     def create_userlist_label(self):
         _translate = QtCore.QCoreApplication.translate
@@ -201,7 +196,6 @@ class Ui_chatWindow(object):
         Form = self.Form
         icon_path_0 = photo_base_path + userid + ".png"
         icon_path_1 = photo_base_path + self.clientId + ".png"
-
 
         textBrowser_00 = QtWidgets.QTextBrowser(Form)
         textBrowser_00.setObjectName("conversation_" + userid)
@@ -288,6 +282,7 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.DELETE_CONVERSATION.connect(self.delete_conversation)
         self.pushButton.clicked.connect(self.SEND)
         self.pushButton.clicked.connect(self.textEdit.clear)
+        self.uploadButton.clicked.connect(self.upload_file)
         for item in self.userlist:
             for button in item[1:]:
                 button.clicked.connect(self.CHANGE_PAGE)
@@ -311,6 +306,16 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.conv_list.append(['PUBLIC', star_path, 0])
         self.conv_people.append('PUBLIC')
         self.update_chatlist()
+
+    def upload_file(self):
+        openfile_name = QFileDialog.getOpenFileName(self, '选择文件', '')
+        id = self.cur_pageid
+        if id == 0:
+            self.APPEND.emit('I upload file:\n' + openfile_name[0])
+            send_file_all(self.sock, openfile_name[0])
+        else:
+            self.conv_pages[id][0].append('I upload file:\n' + openfile_name[0])
+            send_file(self.sock, [self.conv_list[id][0]], openfile_name[0])
 
     def SEND(self):
         id = self.cur_pageid
@@ -350,7 +355,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             self.chatlist[chat_index][3].setText(QtCore.QCoreApplication.translate("Form", ' {0}'.format(self.conv_list[chat_index][2])))
         # self.flush_page(chat_index)
 
-        self.conv_pages[chat_index][0].append(user + ' says:\n' + msg)
+        self.conv_pages[chat_index][0].append(user + msg)
 
     def delete_conversation(self):
         sender = self.sender()
@@ -406,7 +411,6 @@ class ChatPage(QWidget, Ui_chatWindow):
                 self.userlist[i][1].setStyleSheet("QPushButton{border-radius:10px;border-image: url('"+icon_path+"');}")
                 self.userlist[i][1].show()
                 self.userlist[i][2].show()
-
 
     def update_chatlist(self):
         _translate = QtCore.QCoreApplication.translate
@@ -481,7 +485,6 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.flush_page(chat_index)
 
     def flush_page(self, chat_index):
-        #print('?? cur_pageid',self.conv_pages,self.cur_pageid)
         for item in self.conv_pages[self.cur_pageid]:
             item.hide()
 
@@ -497,7 +500,7 @@ class ChatPage(QWidget, Ui_chatWindow):
 
         self.cur_pageid = chat_index
 
-    def setClientId(self,clientId):
+    def setClientId(self, clientId):
         self.clientId = clientId
 
 

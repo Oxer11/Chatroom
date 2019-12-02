@@ -7,7 +7,8 @@ LOGOUT = 4
 ASKUSERS = 5
 SENDFILE = 6  # receiver file_name file_size + data of file
 DOWNFILE = 7  # sender file_name
-CLOSE = 8
+SENDFILEALL = 8
+CLOSE = 9
 
 # server response
 LOGIN_WRONG = 100

@@ -153,7 +153,9 @@ class LoginPage(QWidget, Ui_loginWindow):
         super(LoginPage, self).__init__(parent)
         self.setupUi(self) # 可以在外部调用这个LoginPage的CLOSE信号
         self.sock = sock
+        self.ui_register = RegisterPage(self.sock)
         self.CLOSE.connect(self.close)
+        self.CLOSE.connect(self.ui_register.close)
         background_palette = QPalette()
         background_pixmap = QPixmap(background_path).scaled(self.width(),self.height())
         background_palette.setBrush(self.backgroundRole(),QBrush(background_pixmap))
@@ -183,7 +185,6 @@ class LoginPage(QWidget, Ui_loginWindow):
         self.login_button.clicked.connect(self.id_box.clear)
         self.login_button.clicked.connect(self.password_box.clear)
 
-        self.ui_register = RegisterPage(self.sock)
 
 
     def log_in(self):
@@ -249,7 +250,8 @@ class LoginPage(QWidget, Ui_loginWindow):
         if event.buttons() == Qt.LeftButton:
             self.move(event.globalPos() - self.dragPosition)
             event.accept()
-       
+
+
 class Ui_registerWindow(object):
 
     def setupUi(self, Form):
@@ -342,13 +344,12 @@ class Ui_registerWindow(object):
         self.register_button.setText(_translate("Form", "Register"))
 
 
-
 class RegisterPage(QWidget, Ui_registerWindow):
     CLOSE = QtCore.pyqtSignal()
 
     def __init__(self, sock, parent=None):
         super(RegisterPage, self).__init__(parent)
-        self.setupUi(self) # 可以在外部调用这个RegisterPage的CLOSE信号
+        self.setupUi(self)  # 可以在外部调用这个RegisterPage的CLOSE信号
         self.sock = sock
         self.CLOSE.connect(self.close)
         background_palette = QPalette()
@@ -374,15 +375,15 @@ class RegisterPage(QWidget, Ui_registerWindow):
         self.close_button.setGeometry(QRect(register_width * 0.88, register_height * 0.02, register_width * 0.1, register_width * 0.1))
         self.close_button.clicked.connect(self.CLOSE)
 
-        #self.register_button.clicked.connect(self.log_in)
+        self.register_button.clicked.connect(self.register)
         self.register_button.clicked.connect(self.id_box.clear)
         self.register_button.clicked.connect(self.password_box.clear)
-    '''
-    def log_in(self):
+
+    def register(self):
         username = self.id_box.text()
         password = self.password_box.text()
-        send(self.sock, '\r\n'.join([str(REGISTER), username, password]))  # 发送登录信息
-    '''
+        send(self.sock, '\r\n'.join([str(REGISTER), username, password]))  # 发送注册信息
+
     def paintEvent(self, e):
         qp = QPainter()
         qp.begin(self)
@@ -403,7 +404,7 @@ class RegisterPage(QWidget, Ui_registerWindow):
         #self.frame.setStyleSheet("background-image:url('./images/star.jpg') ")
     def register_anim(self):
         
-        self.anim = QPropertyAnimation(self.star_label,b'geometry')
+        self.anim = QPropertyAnimation(self.star_label, b'geometry')
         self.anim.setDuration(6000)
         self.anim.setStartValue(QRect(register_width * 0.03, register_height * 0.16, register_width * 0.1, register_width * 0.1))
         self.anim.setKeyValueAt(0.15,QRect(register_width * 0.19, register_height * 0.09, register_width * 0.12, register_width * 0.12))
