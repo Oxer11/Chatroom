@@ -35,7 +35,7 @@ SENDFILE_ALL = 510  # sender file_name (to all)
 SENDFILE_NONE = 511
 SENDFILE_PER = 512  # sender file_name
 
-DOWNFILE_SUCCESS = 600 #sender file_name file_size +data of file
+DOWNFILE_SUCCESS = 600  # sender file_name file_size +data of file
 DOWNFILE_NONE = 601
 
 

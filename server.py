@@ -85,6 +85,12 @@ def ask_users(s, data):
 
 def send_file_all(s, data):
     file_name, file_size, cur_data = receive_file(s, data)
+    flie_dic = "./files/__{0}__".format(conn2user[s])
+    if not os.path.exists(flie_dic):
+        os.makedirs(flie_dic)
+    path = os.path.join(flie_dic, file_name)
+    with open(path, "wb") as f:
+        f.write(cur_data)
     broadcast(s, str(SENDFILE_ALL) + '\r\n' + conn2user[s] + '\r\n' + file_name + '\r\n' + file_size)
 
 
@@ -92,6 +98,12 @@ def send_file(sender, data):
     sep = '\r\n'.encode('utf-8')
     receiver, data = data[:data.find(sep)], data[data.find(sep)+2:]
     file_name, file_size, cur_data = receive_file(sender, data)
+    flie_dic = "./files/__{0}__".format(conn2user[sender])
+    if not os.path.exists(flie_dic):
+        os.makedirs(flie_dic)
+    path = os.path.join(flie_dic, file_name)
+    with open(path, "wb") as f:
+        f.write(cur_data)
     receiver = receiver.decode('utf-8').split('\t')
     rec = []
     for r in receiver:  # 向这些人发送信息 先看看数据库里有没有
