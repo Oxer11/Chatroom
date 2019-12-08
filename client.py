@@ -50,7 +50,8 @@ def listener():
                 elif op == SENDFILE_PER:
                     ui_chat.new_conv.emit(data[1], 'uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
                 elif op == ASKUSERS_RET:
-                    ui_chat.ask_users.emit(data[2])
+                    #print('data[2]',data[2])
+                    ui_chat.ask_users.emit((data[2]+'\n')*10)
                 elif op == REGISTER_SUCCESS:
                     ui_login.ui_register.CLOSE.emit()
             except Exception as e:
