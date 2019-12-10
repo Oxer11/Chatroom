@@ -21,10 +21,13 @@ def listener():
         r, w, e = select.select([sock], [], [])
         for s in r:
             try:
-                recv_data = s.recv(BUFFER_SIZE).decode('utf-8')
-                print('Receive:', recv_data)
-                data = recv_data.split('\r\n')
-                op = int(data[0])
+                recv_data = s.recv(BUFFER_SIZE)
+                # print('Receive:', recv_data)
+                op = int(recv_data[:3].decode('utf-8'))
+                if op != DOWNFILE_SUCCESS:
+                    data = recv_data.decode('utf-8').split('\r\n')
+                else:
+                    data = recv_data[5:]
                 if op == LOGIN_SUCCESS:
                     ui_chat.setClientId(ui_login.clientId)
                     ui_login.CLOSE.emit()
@@ -47,13 +50,22 @@ def listener():
                     ui_chat.new_conv.emit(data[1], ' says:\n' + data[2])
                 elif op == SENDFILE_ALL:
                     ui_chat.APPEND.emit(data[1] + ' uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
+                    ui_chat.new_file.emit(data[1], data[2], data[3])
                 elif op == SENDFILE_PER:
                     ui_chat.new_conv.emit(data[1], 'uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
+                    ui_chat.new_file.emit(data[1], data[2], data[3])
                 elif op == ASKUSERS_RET:
-                    #print('data[2]',data[2])
                     ui_chat.ask_users.emit((data[2]+'\n')*10)
                 elif op == REGISTER_SUCCESS:
                     ui_login.ui_register.CLOSE.emit()
+                elif op == DOWNFILE_SUCCESS:
+                    file_name, file_size, cur_data = receive_file(s, data)
+                    flie_dic = "./client/files/__{0}__".format(ui_chat.clientId)
+                    if not os.path.exists(flie_dic):
+                        os.makedirs(flie_dic)
+                    path = os.path.join(flie_dic, file_name)
+                    with open(path, "wb") as f:
+                        f.write(cur_data)
             except Exception as e:
                 print(e)
                 return

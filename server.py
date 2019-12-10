@@ -28,19 +28,6 @@ def log_in(s, data):
     else:
         user2conn.update({user[0]: s})  # 将这个人的用户名和对应的处理套接字加入字典
         conn2user.update({s: user[0]})  # 反之亦然
-        '''
-        count = 0
-        i = 0
-        j = 0
-        top = 27000000
-        
-        while( i < top):
-            while( j < top):
-                count = (count + 1) % 1000
-                j+=1
-                #print(count)
-            i+=1
-        '''
         s.sendall(str(LOGIN_SUCCESS).encode('utf-8'))
         broadcast(s, str(LOGIN_INFO) + '\r\n' + user[0])  # 由发送者s向所有套接字发送信息 说明这个人登录了
 
@@ -98,7 +85,7 @@ def ask_users(s, data):
 
 def send_file_all(s, data):
     file_name, file_size, cur_data = receive_file(s, data)
-    flie_dic = "./files/__{0}__".format(conn2user[s])
+    flie_dic = "./server/files/__{0}__".format(conn2user[s])
     if not os.path.exists(flie_dic):
         os.makedirs(flie_dic)
     path = os.path.join(flie_dic, file_name)
@@ -111,7 +98,7 @@ def send_file(sender, data):
     sep = '\r\n'.encode('utf-8')
     receiver, data = data[:data.find(sep)], data[data.find(sep)+2:]
     file_name, file_size, cur_data = receive_file(sender, data)
-    flie_dic = "./files/__{0}__".format(conn2user[sender])
+    flie_dic = "./server/files/__{0}__".format(conn2user[sender])
     if not os.path.exists(flie_dic):
         os.makedirs(flie_dic)
     path = os.path.join(flie_dic, file_name)
@@ -135,6 +122,16 @@ def send_file(sender, data):
             s.sendall((str(SENDFILE_PER) + '\r\n' + conn2user[sender] + '\r\n' + file_name + '\r\n' + file_size).encode('utf-8'))
 
 
+def down_file(s, data):
+    user, filename = data[0], data[1]
+    file_path = './server/files/__{0}__/{1}'.format(user, filename)
+    file_size = os.stat(file_path).st_size
+    with open(file_path, "rb") as f:
+        content = f.read()
+    send_data = '\r\n'.join([str(DOWNFILE_SUCCESS), filename, str(file_size)]) + chr(0) + chr(0)
+    s.sendall(send_data.encode('utf-8') + content)
+
+
 def close(s, data):
     user = conn2user[s]
     if user is not None:
@@ -153,6 +150,7 @@ handle_dic = {LOGIN: log_in,
               ASKUSERS: ask_users,
               SENDFILEALL: send_file_all,
               SENDFILE: send_file,
+              DOWNFILE: down_file,
               CLOSE: close}
 
 

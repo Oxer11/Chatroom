@@ -61,6 +61,10 @@ def send_all(sock, data):
     send(sock, str(SENDALL) + '\r\n' + data)
 
 
+def down_file(sock, user, filename):
+    send(sock, str(DOWNFILE) + '\r\n' + user + '\r\n' + filename)
+
+
 def ask_users(sock):
     send(sock, str(ASKUSERS))
 
