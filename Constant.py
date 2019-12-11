@@ -40,3 +40,16 @@ DOWNFILE_NONE = 601
 
 
 WRONG_MESSAGE=900
+
+background_path = "./images/star.jpg"
+register_path = "./images/tiancao.png"
+newgroup_path = register_path
+tiancao_path = "./images/tiancao.png"
+star_path = "./images/little_star.png"
+darkstar_path = "./images/dark_star.png"
+login_height = 300
+login_width = 425
+register_height = login_height
+register_width = login_width
+newgroup_height = 300
+newgroup_width = 425

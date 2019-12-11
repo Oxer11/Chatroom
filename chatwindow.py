@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
+from PyQt5.QtGui import *
+from newgroupWindow import *
 from util import *
 import cgitb
 
@@ -18,6 +20,7 @@ filepage_path = darkstar_path
 max_userlist = 10
 max_chatlist = 10
 max_filelist = 10
+groupicon_path = "./images/right2.jpg"
 
 
 '''
@@ -110,6 +113,15 @@ class Ui_chatWindow(object):
         self.pushButton.setCursor(Qt.OpenHandCursor)
         self.pushButton.setText(_translate("Form", "ENTER"))  # 调试
 
+        self.newgroupButton = QtWidgets.QPushButton(Form)
+        self.newgroupButton.setGeometry(QRect(width * 0.01, height * 0.91, width * 0.25, height * 0.07))
+        self.newgroupButton.setStyleSheet("border-radius:10px;background-color:rgba(126,126,126,{0});\
+                    font-size:16px;font-weight:bold;color:white;font-family:Comic Sans MS;".format(opaque))
+        self.newgroupButton.setObjectName("conversation_pushButton_0")
+        self.newgroupButton.setCursor(Qt.OpenHandCursor)
+        self.newgroupButton.setText(_translate("Form", "New Group"))
+        
+
         self.uploadButton = QtWidgets.QPushButton(Form)
         self.uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.15, height * 0.03))
         self.uploadButton.setStyleSheet("border-radius:6px;background-color:rgba(126,126,126,{0});\
@@ -144,6 +156,17 @@ class Ui_chatWindow(object):
         
         Form.setWindowTitle(_translate("Form", "Form"))
 
+        '''
+        sizePolicy = self.sizePolicy() #QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy.setHeightForWidth(True)
+        self.setSizePolicy(sizePolicy)
+
+        #print('line 151 ',self.sizePolicy())
+
+    def heightForWidth(self, width):
+        #print('line 151')
+        return width / chat_width * chat_height
+        '''
     def create_userlist_label(self):
         _translate = QtCore.QCoreApplication.translate
         opaque = self.opaque
@@ -327,7 +350,113 @@ class Ui_chatWindow(object):
         textBrowser_01.hide()
         textEdit_10.hide()
         pushButton_11.hide()
+        uploadButton.hide()
+        icon_button_1.hide()
+        icon_button_0.hide()
         return [textBrowser_00, textBrowser_01, textEdit_10, pushButton_11,uploadButton,icon_button_0,icon_button_1]
+
+    def create_groupchat_page(self, groupid):
+        print('line 359 groupid',groupid)
+        _translate = QtCore.QCoreApplication.translate
+        width = self.width()
+        height = self.height()
+        opaque = self.opaque
+        Form = self.Form
+
+        textBrowser_00 = QtWidgets.QTextBrowser(Form)
+        textBrowser_00.setObjectName("groupchat_" + groupid)
+        textBrowser_00.setStyleSheet("border-radius:10px;background-color:rgba(255,255,255,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        textBrowser_00.setGeometry(QRect(width * 0.3, height * 0.03, width * 0.5, height * 0.75))
+        # self.gridLayout.addWidget(self.textBrowser_2, 0, 0, 1, 1)
+        textBrowser_01 = QtWidgets.QTextBrowser(Form)
+        # self.textBrowser.setMaximumSize(QtCore.QSize(160, 16777215))
+        textBrowser_01.setGeometry(QRect(width *0.83, height * 0.03, width * 0.15, height * 0.75))
+        textBrowser_01.setStyleSheet("border-radius:10px;background-color:rgba(255,255,255,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        textBrowser_01.setObjectName("groupchat_rightbar_"+groupid)
+        # self.gridLayout.addWidget(self.textBrowser, 0, 1, 1, 1)
+        textEdit_10 = QtWidgets.QTextEdit(Form)
+        textEdit_10.setGeometry(QRect(width * 0.3, height * 0.8, width * 0.5 , height * 0.18))
+        textEdit_10.setStyleSheet("border-radius:10px;background-color:rgba(255,255,255,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        # self.textEdit.setMaximumSize(QtCore.QSize(16777215, 70))
+        textEdit_10.setObjectName("groupchat_input_"+groupid)
+        # self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 1)
+        pushButton_11 = QtWidgets.QPushButton(Form)
+        # self.pushButton.setMaximumSize(QtCore.QSize(16777215, 70))
+        pushButton_11.setGeometry(QRect(width * 0.83, height * 0.84, width * 0.15, height * 0.14))
+        pushButton_11.setStyleSheet("border-radius:10px;background-color:rgba(255,255,255,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        pushButton_11.setObjectName("groupchat_pushButton_"+groupid)
+        pushButton_11.setText(_translate("Form", "ENTER"))
+        pushButton_11.setCursor(Qt.OpenHandCursor)
+
+        uploadButton = QtWidgets.QPushButton(Form)
+        uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.15, height * 0.03))
+        uploadButton.setStyleSheet("border-radius:6px;background-color:rgba(255,255,255,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+        uploadButton.setObjectName("groupchat_uploadButton_"+groupid)
+        uploadButton.setCursor(Qt.OpenHandCursor)
+        uploadButton.clicked.connect(self.upload_file)
+        uploadButton.setText(_translate("Form", "UPLOAD FILE"))
+
+        leftButton = QtWidgets.QPushButton(Form)
+        leftButton.setGeometry(QRect(width * 0.85, height * 0.75, width * 0.05, height * 0.02))
+        leftButton.setStyleSheet("border-radius:10px;background-color:rgba(126,126,126,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(0))
+        leftButton.setObjectName("groupchat_leftButton_"+groupid)
+        leftButton.setCursor(Qt.OpenHandCursor)
+        leftButton.setText(_translate("Form", "<-<-")) 
+        leftButton.clicked.connect(self.last_page)
+         
+
+        rightButton = QtWidgets.QPushButton(Form)
+        rightButton.setGeometry(QRect(width * 0.92, height * 0.75, width * 0.05, height * 0.02))
+        rightButton.setStyleSheet("border-radius:10px;background-color:rgba(126,126,126,{0});\
+                    font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(0))
+
+                    #border-image: url('./images/right2.jpg')
+        rightButton.setObjectName("groupchat_rightButton_"+groupid)
+        rightButton.setCursor(Qt.OpenHandCursor)
+        rightButton.setText(_translate("Form", "->->")) 
+        rightButton.clicked.connect(self.next_page) 
+
+        items = [textBrowser_00, textBrowser_01, textEdit_10, pushButton_11,uploadButton,leftButton,rightButton]
+        userlist = []
+        for i in range(max_userlist):
+            icon_button = QtWidgets.QPushButton(self.Form)
+            icon_button.setStyleSheet("QPushButton{border-radius:10px;border-image: url('./images/dark_star');}")
+            icon_button.setCursor(Qt.OpenHandCursor)
+            icon_button.setObjectName("group_{0}_user_icon_{1}".format(groupid,i))
+            icon_button.setGeometry(QRect(width * 0.845, height * (0.04 + i * width/height * 0.05 ), width * 0.045, width * 0.045))
+            icon_button.hide()
+            icon_button.clicked.connect(self.CHANGE_PAGE)
+            userid_button = QtWidgets.QPushButton(self.Form)
+            userid_button.setText(_translate("Form", str(i)))
+            userid_button.setCursor(Qt.OpenHandCursor)
+            userid_button.setStyleSheet("border-radius:10px;background-color:rgba(255,255,255,{0});\
+                        font-size:16px;font-weight:bold;color:black;font-family:Comic Sans MS;".format(opaque))
+            userid_button.setObjectName("group_{0}_user_userid_{1}".format(groupid,i))
+            userid_button.setGeometry(QRect(width * 0.89, height * (0.05 + i * width/height * 0.05), width * 0.08, width * 0.03))
+            userid_button.hide()
+            userid_button.clicked.connect(self.CHANGE_PAGE)
+            userlist.append(['', icon_button, userid_button])
+            items.append(icon_button)
+            items.append(userid_button)
+
+
+        textBrowser_00.hide()
+        textBrowser_01.hide()
+        textEdit_10.hide()
+        pushButton_11.hide()
+        uploadButton.hide()
+        leftButton.hide()
+        rightButton.hide()
+        return items,userlist
+
+    
+
 
 
 class ChatPage(QWidget, Ui_chatWindow):
@@ -339,9 +468,13 @@ class ChatPage(QWidget, Ui_chatWindow):
     CHANGE_PAGE = QtCore.pyqtSignal()
     DELETE_CONVERSATION = QtCore.pyqtSignal()
 
-    conv_list = []  # 组件信息的列表 记录了组件的 用户名、头像路径和消息数量
+    conv_list = []  # 组件信息的列表 记录了组件的 用户名、头像路径和消息数量,or other information
     conv_pages = []  # 每一个页是一个组件的列表 pagelist是列表的列表 其顺序对应chatbar中的顺序
     conv_people = []
+    conv_type = [] # public \ file \ private \ group
+    group_userbutton_list = {}
+    group_user_list = {}
+    group_page = {}
     # conv的0都是public 1都是file
     # cur_pageid 记录当前页 页是一个列表 [] 包含4个框 以及可能会有头像和别的按钮 public聊天的用户列表
     # userlist 和 chatlist 是组件的列表
@@ -402,20 +535,57 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.conv_list.append(['FILE',filepage_path, 0])
         self.conv_people.append('PUBLIC')
         self.conv_people.append('FILE')
+        self.conv_type = ['public','file']
         self.update_chatlist()
 
         self.userpage_index = 1
+        self.newgroupButton.clicked.connect(self.find_newgroup)
+        self.new_groupWindow = NewGroupPage(self.sock)
+
+        #self.new_group('gp_4396')
+
+    def find_newgroup(self):
+        self.new_groupWindow.show()
+        self.new_groupWindow.owner = self
+
+        
+
 
     def last_page(self):
-        if self.userpage_index > 1:
-            self.userpage_index -= 1
-            self.update_userlist()
+        sender = self.sender()
+        name = sender.objectName()
+        prefix = name.split('_')[0]
+        #print('prefix',prefix)
+        if prefix == 'conversation':
+            if self.userpage_index > 1:
+                self.userpage_index -= 1
+                self.update_userlist()
+        elif prefix == 'groupchat':
+            groupid = 'gp_'+name.split('_')[-1]
+            chat_index = self.conv_people.index(groupid)
+            if self.group_page[chat_index] > 1:
+                self.group_page[chat_index] -=1
+                #print('page ',self.group_page[chat_index])
+                self.update_group_userlist(chat_index)
 
     def next_page(self):
         # print('?? ,len(self.users) ',self.userpage_index,len(self.users),max_userlist,self.userpage_index < (len(self.users) // max_userlist))
-        if self.userpage_index < (len(self.users) // max_userlist):
-            self.userpage_index +=1
-            self.update_userlist()
+        sender = self.sender()
+        name = sender.objectName()
+        prefix = name.split('_')[0]
+        #print('prefix',prefix)
+        if prefix == 'conversation':
+            if self.userpage_index < ((len(self.users) -1) // max_userlist +1):
+                self.userpage_index +=1
+                self.update_userlist()
+        elif prefix == 'groupchat':
+            groupid = 'gp_'+name.split('_')[-1]
+            chat_index = self.conv_people.index(groupid)
+            #print(' chat_index',chat_index)
+            if self.group_page[chat_index] < ((len(self.group_user_list[chat_index]) -1)// max_userlist +1):
+                self.group_page[chat_index] +=1
+                #print('page ',self.group_page[chat_index])
+                self.update_group_userlist(chat_index)
 
     def upload_file(self):
         openfile_name = QFileDialog.getOpenFileName(self, '选择文件', '')
@@ -466,7 +636,8 @@ class ChatPage(QWidget, Ui_chatWindow):
             page[3].clicked.connect(self.SEND)
             page[3].clicked.connect(page[2].clear)
             self.conv_pages.append(page)
-
+            self.conv_type.append('private')
+            
         chat_index = self.conv_people.index(user)
         if chat_index != self.cur_pageid:
             self.conv_list[chat_index][2] += 1
@@ -485,6 +656,22 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.update_chatlist()
         self.flush_page(0)
         self.conv_pages.pop(btn_idx)
+        #print('btn_idx,',btn_idx,self.conv_type)
+        if self.conv_type[btn_idx] == 'group':
+            del self.group_userbutton_list[btn_idx]
+            del self.group_user_list[btn_idx]
+            del self.group_page[btn_idx]
+        #print('group page',self.group_page)
+        #copy = self.group_page
+        for chat_index in self.group_page.copy():
+            #print('check index',chat_index)
+            self.group_page[chat_index-1] = self.group_page[chat_index]
+            self.group_userbutton_list[chat_index-1] = self.group_userbutton_list[chat_index]
+            self.group_user_list[chat_index-1] = self.group_user_list[chat_index]
+            del self.group_page[chat_index]
+            del self.group_userbutton_list[chat_index]
+            del self.group_user_list[chat_index]
+        self.conv_type.pop(btn_idx)
 
     def update_userlist(self, data=None):
 
@@ -532,6 +719,58 @@ class ChatPage(QWidget, Ui_chatWindow):
                 self.userlist[i][1].setStyleSheet("QPushButton{border-radius:10px;border-image: url('"+icon_path+"');}")
                 self.userlist[i][1].show()
                 self.userlist[i][2].show()
+
+    def update_group_userlist(self,chat_index, data=None):
+
+        _translate = QtCore.QCoreApplication.translate
+        for i in range(max_userlist):
+            self.group_userbutton_list[chat_index][i][0] = ''
+            icon_button = self.group_userbutton_list[chat_index][i][1]
+            userid_button = self.group_userbutton_list[chat_index][i][2]
+            icon_button.hide()
+            userid_button.hide()
+
+        '''
+        self.user_peoplelist = [['PUBLIC', star_path]]
+        if data is not None:
+            self.users = data.split('\n')  # 希望保存这个数据
+
+
+        for i, userid in enumerate(self.users[(self.userpage_index-1)*max_userlist:self.userpage_index*max_userlist]):
+            if len(userid) == 0:
+                continue
+            self.userlist[i][0] = userid
+            icon_path = photo_base_path + userid + ".png"
+            self.user_peoplelist.append([userid, icon_path])
+
+        log_out_user = None
+        for i, item in enumerate(self.conv_list):
+            if i != 0 and i != 1 and item[0] not in self.users:
+                print(item[0], self.users)
+                log_out_user = i
+        if log_out_user is not None:
+            if self.cur_pageid == log_out_user:
+                self.flush_page(0)
+            elif self.cur_pageid > log_out_user:
+                self.cur_pageid -= 1
+            self.conv_list.pop(log_out_user)
+            self.conv_people.pop(log_out_user)
+            self.conv_pages.pop(log_out_user)
+            self.update_chatlist()
+        '''
+
+        for i, item in enumerate(self.group_user_list[chat_index][(self.group_page[chat_index]-1)*max_userlist:self.group_page[chat_index]*max_userlist]):
+            userid = item[0]
+
+            if len(userid) == 0:
+                continue
+            self.group_userbutton_list[chat_index][i][0] = userid
+            icon_path = photo_base_path + userid + ".png"
+            if self.cur_pageid == chat_index:
+                self.group_userbutton_list[chat_index][i][2].setText(_translate("Form", userid))
+                self.group_userbutton_list[chat_index][i][1].setStyleSheet("QPushButton{border-radius:10px;border-image: url('"+icon_path+"');}")
+                self.group_userbutton_list[chat_index][i][1].show()
+                self.group_userbutton_list[chat_index][i][2].show()
 
     def update_filelist(self):
         _translate = QtCore.QCoreApplication.translate
@@ -621,12 +860,20 @@ class ChatPage(QWidget, Ui_chatWindow):
         sender = self.sender()
         name = sender.objectName()
         btn_idx = int(name.split('_')[-1])  # 这个是按钮序号
+        #print('btn_idx',btn_idx)
         prefix = name.split('_')[0]
         # pre = chat -> chatbar
         # pre = user -> userbar
         midfix = name.split('_')[1]
-        if prefix == 'user':
-            username = self.userlist[btn_idx][0]  # 用户名
+
+        if prefix == 'user' or prefix == 'group':
+            if prefix == 'user':
+                username = self.userlist[btn_idx][0]  # 用户名
+            elif prefix == 'group':
+                groupid = 'gp_'+name.split('_')[2]
+                chat_index = self.conv_people.index(groupid)
+                username = self.group_userbutton_list[chat_index][btn_idx][0]
+            #print('username ',self.userlist,username)
             if username == self.clientId:
                 return
             if username not in self.conv_people:
@@ -653,6 +900,7 @@ class ChatPage(QWidget, Ui_chatWindow):
                 page[3].clicked.connect(self.SEND)
                 page[3].clicked.connect(page[2].clear)
                 self.conv_pages.append(page)
+                self.conv_type.append('private')
 
             chat_index = self.conv_people.index(username)
 
@@ -660,6 +908,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             chat_index = btn_idx
         elif prefix == 'conversation':
             chat_index = 0
+
 
         self.conv_list[chat_index][2] = 0
         if self.cur_pageid == 1:
@@ -669,25 +918,51 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.flush_page(chat_index)
 
     def flush_page(self, chat_index):
+        #print('line 788',self.conv_pages[self.cur_pageid])
         for item in self.conv_pages[self.cur_pageid]:
             item.hide()
 
-        if chat_index == 0:
+        page_type = self.conv_type[chat_index]
+
+        if page_type == 'public':
             for item in self.conv_pages[chat_index][:7]:
                 item.show() 
             for items in self.userlist[:len(self.user_peoplelist)-1]:
                 for item in items[1:3]:
                     item.show()
-        elif chat_index == 1:
+        elif page_type == 'file':
             self.update_filelist()
             file_list = self.file_list
             for i, filetup in enumerate(file_list[:len(self.filedata_list)]):
                 for item in filetup[1:]:
                     item.show()
-        else:
+        elif page_type == 'private':
             for item in self.conv_pages[chat_index]:
                 item.show()
+        elif page_type == 'group':
+            #print('line 815 ',self.conv_pages)
+            for item in self.conv_pages[chat_index][:7]:
+                item.show()
+            print('self group_page',self.group_page)
+            userpage = self.group_page[chat_index]
+
+            for i,item in enumerate(self.group_user_list[chat_index][(userpage - 1) *max_userlist : userpage * max_userlist]):
+                user = item[0]
+                if ( user == ''):
+                    break
+                icon_path = item[1]
+                #print('850 ???',self.group_userbutton_list[chat_index])
+                icon_button = self.group_userbutton_list[chat_index][i][1]
+                icon_button.setStyleSheet("QPushButton{border-radius:10px;border-image: url('"+icon_path+"');}")
+                userid_button = self.group_userbutton_list[chat_index][i][2]
+                self.group_userbutton_list[chat_index][i][0] = user
+                _translate = QtCore.QCoreApplication.translate
+                userid_button.setText(_translate("Form", user))
+                icon_button.show()
+                userid_button.show()
+
         self.cur_pageid = chat_index
+
 
     def setClientId(self, clientId):
         self.clientId = clientId
@@ -695,7 +970,11 @@ class ChatPage(QWidget, Ui_chatWindow):
     def resizeEvent(self, event):
         width = self.width()
         height = self.height()
-        # print('w h ',width,height)
+        '''
+        print('line 710')
+        self.setMinimumHeight(width * 0.5 / 0.7)
+        print('line 712 ',height,width * 0.5 / 0.7)
+        '''
         self.chatBar.setGeometry(QRect(0, 0, width * 0.27, height))
         self.chatBarPic.setGeometry(QRect(0, 0, width * 0.27, height))
         self.chatBoardPic.setGeometry(QRect(width * 0.27, 0, width * 0.73, height))
@@ -706,18 +985,28 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.15, height * 0.03))
         self.leftButton.setGeometry(QRect(width * 0.85, height * 0.75, width * 0.05, height * 0.02))
         self.rightButton.setGeometry(QRect(width * 0.92, height * 0.75, width * 0.05, height * 0.02))
-        
+         
+
+
         for i, tup in enumerate(self.userlist):
             icon_button = tup[1]
             userid_button = tup[2]
-            icon_button.setGeometry(QRect(width * 0.845, height * (0.04 + i * width/height * 0.05), width * 0.045, width * 0.045))
-            userid_button.setGeometry(QRect(width * 0.89, height * (0.05 + i * width/height * 0.05), width * 0.08, width * 0.03))
+            width_ = width
+           
+            if (height *1.4133 < width):
+                width_ = height * 1.4133 
+                
+            
+            icon_button.setGeometry(QRect(width * 0.845, height * (0.04 + i * width_/height * 0.05), width_ * 0.045, width_ * 0.045))
+            userid_button.setGeometry(QRect(width * 0.89, height * (0.05 + i * width_/height * 0.05), width_ * 0.08, width_ * 0.03))
 
         for i, tup in enumerate(self.chatlist):
             icon_button = tup[1]
             userid_button = tup[2]
             nummessage_label = tup[3]
             close_button = tup[4]
+
+
             icon_button.setGeometry(QRect(width * 0.015, height * (0.035 + i * width/height * 0.06 ), width * 0.06, width * 0.06))
             userid_button.setGeometry(QRect(width * 0.08, height * (0.05 + i * width/height * 0.06), width * 0.18, width * 0.045))
             nummessage_label.setGeometry(QRect(width * 0.23, height * (0.063 + i * width/height * 0.06), width * 0.03, width * 0.03))
@@ -752,6 +1041,54 @@ class ChatPage(QWidget, Ui_chatWindow):
             reject_button.setGeometry(QRect(width * 0.9, height * (0.03 + i * width/height * 0.07), width * 0.04, width * 0.04))
 
 
+        
+        # assert 0.7 * height > 0.45 * width
+        '''
+        print('line 774 ',width,height,0.45 * width / 0.7)
+        if ( height < 0.45 * width / 0.7 -1):
+            print('line 778 resize',height , 0.45 * width / 0.7)
+            self.resize(width, 0.45 * width / 0.7)
+            print('line 713 resize over')
+            return
+        '''
+        
+    def new_group(self, groupid): # 就让groupid的格式为'gp_4356'这样吧
+        if groupid not in self.conv_people:
+            self.conv_people.append(groupid)
+            #icon_path = photo_base_path + user + ".png"
+
+            self.conv_list.append([groupid, groupicon_path, 0])
+            self.update_chatlist()
+
+            page,group_userbutton_list = self.create_groupchat_page(groupid)
+            page[3].clicked.connect(self.SEND)
+            page[3].clicked.connect(page[2].clear)
+            self.conv_pages.append(page)
+            self.conv_type.append('group')
+            
+        chat_index = self.conv_people.index(groupid)
+
+        # 修改：读取当前聊天室用户数据，并为他们设置头像 现在是测试代码
+        group_user_list = []
+        for i in range(25):
+            dic = {0:'oxer',1:'hwh',2:'wch',3:'lhq'}
+            user = dic[ i%4 ]
+            icon_path = photo_base_path + user + ".png"
+            group_user_list.append((user, icon_path))
+
+
+        self.group_userbutton_list[chat_index] = group_userbutton_list
+        self.group_user_list[chat_index] = group_user_list
+        self.group_page[chat_index] = 1
+        print('self.group_user_list[chat_index]',self.group_user_list[chat_index])
+        if chat_index != self.cur_pageid:
+            #self.conv_list[chat_index][2] += 1
+            self.chatlist[chat_index][3].setText(QtCore.QCoreApplication.translate("Form", ' {0}'.format(self.conv_list[chat_index][2])))
+        
+        print('people ',self.conv_people)
+        print('list ',self.conv_list)
+        print('type ',self.conv_type)
+        self.flush_page(chat_index)
 
 
 
