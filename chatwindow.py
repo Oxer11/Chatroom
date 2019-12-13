@@ -42,6 +42,7 @@ class Ui_chatBar(QFrame):
         self.setPalette(background_palette)
 '''
 
+
 class Ui_chatWindow(object):
 
     def setupUi(self, Form):
