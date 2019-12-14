@@ -60,18 +60,6 @@ def send_file(sock, receiver, file_path):
     return True
 
 
-def send_file_group(sock, groupid, receiver, file_path):
-    file_name = os.path.basename(file_path)
-    file_size = os.stat(file_path).st_size
-    if file_size > max_file_size:
-        return False
-    with open(file_path, "rb") as f:
-        content = f.read()
-    send_data = '\r\n'.join([str(SENDFILEGROUP), groupid, '\t'.join(receiver), file_name, str(file_size)]) + chr(0) + chr(0)
-    send(sock, send_data, content)
-    return True
-
-
 def send_msg(sock, receiver, data):
     print(receiver)
     send_data = [str(SENDMSG), '\t'.join(receiver), data]

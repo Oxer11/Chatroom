@@ -82,7 +82,7 @@ def listener():
                     ui_chat.OUT_GROUP_USER.emit(data[1], data[2])
                 elif op == SENDFILE_GROUP:
                     ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' uploads a file:\n' + data[3] + '\nsize:\n' + data[4])
-                    ui_chat.new_file.emit(data[1], data[3], data[4])
+                    ui_chat.new_file.emit(data[2], data[3], data[4])
             except Exception as e:
                 print(e)
                 return

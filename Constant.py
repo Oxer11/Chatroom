@@ -9,6 +9,12 @@ SENDFILE = 6  # receiver file_name file_size + data of file
 DOWNFILE = 7  # sender file_name
 SENDFILEALL = 8
 CLOSE = 9
+NEWGROUP = 10
+ASKGROUPUSERS = 11
+SENDGROUPMSG = 12
+GROUPLOGOUT = 13
+SENDFILEGROUP = 14
+
 
 # server response
 LOGIN_WRONG = 100
@@ -34,22 +40,27 @@ SENDFILE_SUCCESS = 502
 SENDFILE_ALL = 510  # sender file_name (to all)
 SENDFILE_NONE = 511
 SENDFILE_PER = 512  # sender file_name
+SENDFILE_GROUP = 513  # sender groupid file_name
 
 DOWNFILE_SUCCESS = 600  # sender file_name file_size +data of file
 DOWNFILE_NONE = 601
 
+WRONG_MESSAGE = 900
 
-WRONG_MESSAGE=900
+GROUP_SUCCESS = 109
+GROUP_LOGIN = 108
+GROUP_LOGOUT = 107
+GROUP_FAIL = 106
 
+ASKGROUPUSERS_RET = 110
+
+SENDGROUPMSG_SUCCESS = 120
+SENDGROUPMSG_ERROR = 121
+
+# File Path
 background_path = "./images/star.jpg"
 register_path = "./images/tiancao.png"
 newgroup_path = register_path
 tiancao_path = "./images/tiancao.png"
 star_path = "./images/little_star.png"
 darkstar_path = "./images/dark_star.png"
-login_height = 300
-login_width = 425
-register_height = login_height
-register_width = login_width
-newgroup_height = 300
-newgroup_width = 425

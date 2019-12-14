@@ -7,8 +7,10 @@ from Constant import *
 from util import receive_file
 
 HOST = '127.0.0.1'
-PORT = 9068
+PORT = 9078
 BUFFER_SIZE = 4096
+
+group = {}
 
 
 def broadcast(sender, msg):
@@ -77,10 +79,8 @@ def log_out(s, data):
 
 
 def ask_users(s, data):
-    user = conn2user[s]
     users = list(user2conn.keys())
-    # users.remove(user)
-    s.sendall('\r\n'.join([str(ASKUSERS_RET), str(len(user2conn.keys())), '\n'.join(users)]).encode('utf-8'))
+    s.sendall('\r\n'.join([str(ASKUSERS_RET), str(len(users)), '\n'.join(users)]).encode('utf-8'))
 
 
 def send_file_all(s, data):
@@ -118,8 +118,39 @@ def send_file(sender, data):
             except KeyError:
                 sender.sendall(str(SENDFILE_ERROR).encode('utf-8'))
     for s in rec:  # rec是所有合法的收信者
-        if s != sock:
+        if s != sock and s != sender:
             s.sendall((str(SENDFILE_PER) + '\r\n' + conn2user[sender] + '\r\n' + file_name + '\r\n' + file_size).encode('utf-8'))
+
+
+def send_file_group(sender, data):
+    sep = '\r\n'.encode('utf-8')
+    groupid, data = data[:data.find(sep)], data[data.find(sep)+2:]
+    receiver, data = data[:data.find(sep)], data[data.find(sep)+2:]
+    file_name, file_size, cur_data = receive_file(sender, data)
+    flie_dic = "./server/files/__{0}__".format(conn2user[sender])
+    if not os.path.exists(flie_dic):
+        os.makedirs(flie_dic)
+    path = os.path.join(flie_dic, file_name)
+    with open(path, "wb") as f:
+        f.write(cur_data)
+    receiver = receiver.decode('utf-8').split('\t')
+    groupid = groupid.decode('utf-8')
+    rec = []
+    for r in receiver:  # 向这些人发送信息 先看看数据库里有没有
+        cursor.execute("select * from user where username = '{0}'".format(r))
+        user = cursor.fetchone()
+        if user is None:
+            sender.sendall(str(SENDFILE_ERROR).encode('utf-8'))  # 在发送者的套接字上发送 发送信息错误
+        else:
+            try:
+                s = user2conn[user[0]]
+                rec.append(s)
+            except KeyError:
+                sender.sendall(str(SENDFILE_ERROR).encode('utf-8'))
+    for s in rec:  # rec是所有合法的收信者
+        if s != sock and s != sender:
+            s.sendall('\r\n'.join([str(SENDFILE_GROUP), conn2user[sender],
+                                   groupid, file_name, file_size]).encode('utf-8'))
 
 
 def down_file(s, data):
@@ -135,11 +166,61 @@ def down_file(s, data):
 def close(s, data):
     user = conn2user[s]
     if user is not None:
+        for grp in group.copy():
+            if user in group[grp]:
+                group_log_out(s, [grp, user])
         broadcast(s, str(LOGOUT_INFO) + '\r\n' + user)
         del user2conn[user]
     del conn2user[s]
     connections.remove(s)
     s.close()
+
+
+def new_group(s, data):
+    user = conn2user[s]
+    if data[0] not in group:
+        group[data[0]] = [user]
+    else:
+        if user in group[data[0]]:
+            s.sendall((str(GROUP_FAIL)).encode('utf-8'))
+            return
+        for u in group[data[0]]:
+            user2conn[u].sendall('\r\n'.join([str(GROUP_LOGIN), user, data[0]]).encode('utf-8'))
+        group[data[0]].append(user)
+    s.sendall((str(GROUP_SUCCESS) + '\r\n' + data[0]).encode('utf-8'))
+
+
+def ask_group_users(s, data):
+    users = group[data[0]]
+    s.sendall('\r\n'.join([str(ASKGROUPUSERS_RET), data[0], '\n'.join(users)]).encode('utf-8'))
+
+
+def send_group_msg(sender, data):
+    receiver = data[1].split('\t')
+    rec = []
+    for r in receiver:  # 向这些人发送信息 先看看数据库里有没有
+        cursor.execute("select * from user where username = '{0}'".format(r))
+        user = cursor.fetchone()
+        if user is None:
+            sender.sendall(str(SENDGROUPMSG_ERROR).encode('utf-8'))  # 在发送者的套接字上发送 发送信息错误
+        else:
+            try:
+                s = user2conn[user[0]]
+                rec.append(s)
+            except KeyError:
+                sender.sendall(str(SENDGROUPMSG_ERROR).encode('utf-8'))
+    for s in rec:  # rec是所有合法的收信者
+        if s != sock and s != sender:
+            s.sendall('\r\n'.join([str(SENDGROUPMSG_SUCCESS), conn2user[sender], data[0], data[2]]).encode('utf-8'))
+
+
+def group_log_out(sender, data):
+    group[data[0]].remove(data[1])
+    if len(group[data[0]]) == 0:
+        del group[data[0]]
+    else:
+        for u in group[data[0]]:
+            user2conn[u].sendall('\r\n'.join([str(GROUP_LOGOUT), data[1], data[0]]).encode('utf-8'))
 
 
 handle_dic = {LOGIN: log_in,
@@ -151,7 +232,12 @@ handle_dic = {LOGIN: log_in,
               SENDFILEALL: send_file_all,
               SENDFILE: send_file,
               DOWNFILE: down_file,
-              CLOSE: close}
+              CLOSE: close,
+              NEWGROUP: new_group,
+              ASKGROUPUSERS: ask_group_users,
+              SENDGROUPMSG: send_group_msg,
+              GROUPLOGOUT: group_log_out,
+              SENDFILEGROUP: send_file_group}
 
 
 def handle(s, data):  # 处理收到的信息
@@ -159,6 +245,8 @@ def handle(s, data):  # 处理收到的信息
     try:
         if int(sec[0]) in [SENDFILEALL, SENDFILE]:
             handle_dic[int(sec[0])](s, data[3:])
+        elif int(sec[0]) == SENDFILEGROUP:
+            handle_dic[int(sec[0])](s, data[4:])
         else:
             sec = data.decode('utf-8').split('\r\n')
             handle_dic[int(sec[0])](s, sec[1:])
@@ -190,7 +278,6 @@ if __name__ == '__main__':
             if s == sock:
                 conn, addr = s.accept()  # sock接受一个连接 记录其套接字conn
                 connections.add(conn)
-                # print('connections ',connections,conn)
                 conn2user[conn] = None
             else:
                 try:
