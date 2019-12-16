@@ -202,8 +202,6 @@ class LoginPage(QWidget, Ui_loginWindow):
                                     LOG_WIDTH * 0.1, LOG_WIDTH * 0.1))
         self.anim.start()
 
-    '''
-    # Oxer:这段有啥用？
     def paintEvent(self, e):
         qp = QPainter()
         qp.begin(self)
@@ -218,10 +216,7 @@ class LoginPage(QWidget, Ui_loginWindow):
         for pos in line:
             qp.drawLine(LOG_WIDTH * pos[0], LOG_HEIGHT * pos[1],
                         LOG_WIDTH * pos[2], LOG_HEIGHT * pos[3])
-    '''
 
-    ''' 
-    # Oxer:这段有啥用？没用的话我就删了
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
@@ -232,4 +227,3 @@ class LoginPage(QWidget, Ui_loginWindow):
         if event.buttons() == Qt.LeftButton:
             self.move(event.globalPos() - self.dragPosition)
             event.accept()
-    '''

@@ -433,8 +433,9 @@ class ChatPage(QWidget, Ui_chatWindow):
         page_type = self.conv_type[chat_index]
 
         if page_type == 'public':
-            for item in self.conv_pages[chat_index]:
+            for item in self.conv_pages[chat_index][:8]:
                 item.show()
+            print(self.user_peoplelist)
             for items in self.userlist[:len(self.user_peoplelist) - 1]:
                 items.show()
         elif page_type == 'file':

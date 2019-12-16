@@ -184,8 +184,6 @@ class RegisterPage(QWidget, Ui_registerWindow):
                                     REG_WIDTH * 0.1, REG_WIDTH * 0.1))
         self.anim.start()
 
-    '''
-    # Oxer:这段有啥用？
     def paintEvent(self, e):
         qp = QPainter()
         qp.begin(self)
@@ -200,10 +198,7 @@ class RegisterPage(QWidget, Ui_registerWindow):
         for pos in line:
             qp.drawLine(REG_WIDTH * pos[0], REG_HEIGHT * pos[1],
                         REG_WIDTH * pos[2], REG_HEIGHT * pos[3])
-    '''
 
-    '''
-    # Oxer:这段有啥用？没用的话我就删了
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
@@ -214,4 +209,3 @@ class RegisterPage(QWidget, Ui_registerWindow):
         if event.buttons() == Qt.LeftButton:
             self.move(event.globalPos() - self.dragPosition)
             event.accept()
-    '''
