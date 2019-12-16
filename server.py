@@ -221,6 +221,7 @@ def group_log_out(sender, data):
     else:
         for u in group[data[0]]:
             user2conn[u].sendall('\r\n'.join([str(GROUP_LOGOUT), data[1], data[0]]).encode('utf-8'))
+            time.sleep(1)
 
 
 handle_dic = {LOGIN: log_in,
@@ -266,6 +267,7 @@ if __name__ == '__main__':
 
     # Initialize connection
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     sock.bind((HOST, PORT))
     sock.listen()
     print("start server", HOST, PORT)

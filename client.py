@@ -90,6 +90,7 @@ def listener():
 
 if __name__ == '__main__':
     sock = socket.socket()
+    sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     try:
         sock.connect((HOST, PORT))
         print('Connected with server')
