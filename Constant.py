@@ -62,7 +62,7 @@ UP_PHOTO = 150
 
 # File Path
 photo_base_path = "./client/photo/"
-background_path = "./images/log_bg.jpg"
+background_path = "./images/star.jpg"#"./images/log_bg.jpg"
 register_path = "./images/reg_bg.jpeg"
 newgroup_path = "./images/new_group_bg.jpeg"
 tiancao_path = "./images/tiancao.png"

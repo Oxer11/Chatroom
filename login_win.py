@@ -63,7 +63,7 @@ class Ui_loginWindow(object):
         font.setPointSize(16)
         self.id.setFont(font)
         self.id.setObjectName("id")
-        self.id.setStyleSheet('color: black;font-weight:bold;')
+        self.id.setStyleSheet('color: white;font-weight:bold;')
 
         self.password = QtWidgets.QLabel(self.frame)
         self.password.setGeometry(QRect(LOG_WIDTH * .067, LOG_HEIGHT * .22,
@@ -71,16 +71,17 @@ class Ui_loginWindow(object):
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
         font.setPointSize(16)
-        self.password.setStyleSheet('color: black;font-weight:bold;')
+        self.password.setStyleSheet('color: white;font-weight:bold;')
         self.password.setFont(font)
         self.password.setObjectName("password")
 
         default_style = {'border-radius': '10px',
-                         'background-color': 'rgba(150,150,150,126)',
+                         'background-color': 'rgba(0,0,0,126)',
                          'font-size': '16px',
                          'font-weight': 'bold',
-                         'color': 'black',
+                         'color': 'white',
                          'font-family': 'Comic Sans MS'}
+
 
         self.id_box = QtWidgets.QLineEdit(self.frame)
         self.id_box.setObjectName("id_box")
