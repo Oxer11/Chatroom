@@ -11,18 +11,13 @@ MAX_USER = 10
 MAX_CHAT = 10
 MAX_FILE = 10
 photo_base_path = "./images/photo/"
-darkstar_path = "./images/dark_star.png"
 cgitb.enable(format = 'text')
-chatbar_path = "./images/hanabi.png"
-chatboard_path = "./images/hanabi_colorful.jpg"
 kyogre_path = "./images/kyogre-primal.png"
-filepage_path = darkstar_path
-groupicon_path = "./images/right2.jpg"
 
 
 opacity = 210
 default_style = {'border-radius': '10px',
-                 'background-color': 'rgba(126,126,126,{0})'.format(opacity),
+                 'background-color': 'rgba(160,160,160,{0})'.format(opacity),
                  'font-size': '16px',
                  'font-weight': 'bold',
                  'color': 'black',
@@ -87,7 +82,7 @@ class Ui_chatWindow(object):
         self.pushButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.84,
                                           WIDTH * 0.15, HEIGHT * 0.14))
         self.pushButton.setCursor(Qt.OpenHandCursor)
-        self.pushButton.setText(_translate("Form", "ENTER"))  # 调试
+        self.pushButton.setText(_translate("Form", "发送消息"))  # 调试
 
         self.newgroupButton = QtWidgets.QPushButton(Form)
         self.newgroupButton.setObjectName("conversation_pushButton_0")
@@ -95,7 +90,7 @@ class Ui_chatWindow(object):
         self.newgroupButton.setGeometry(QRect(WIDTH * 0.01, HEIGHT * 0.91,
                                               WIDTH * 0.25, HEIGHT * 0.07))
         self.newgroupButton.setCursor(Qt.OpenHandCursor)
-        self.newgroupButton.setText(_translate("Form", "New Group"))
+        self.newgroupButton.setText(_translate("Form", "新建群聊"))
 
         self.uploadButton = QtWidgets.QPushButton(Form)
         self.uploadButton.setObjectName("conversation_uploadButton_0")
@@ -103,7 +98,7 @@ class Ui_chatWindow(object):
         self.uploadButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.80,
                                             WIDTH * 0.15, HEIGHT * 0.03))
         self.uploadButton.setCursor(Qt.OpenHandCursor)
-        self.uploadButton.setText(_translate("Form", "UPLOAD FILE"))
+        self.uploadButton.setText(_translate("Form", "上传文件"))
 
         self.leftButton = QtWidgets.QPushButton(Form)
         self.leftButton.setObjectName("conversation_leftButton_0")
@@ -271,7 +266,7 @@ class Ui_chatWindow(object):
         textBrowser_00 = QtWidgets.QTextBrowser(Form)
         textBrowser_00.setObjectName("conversation_" + userid)
         textBrowser_00.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
         textBrowser_00.setGeometry(QRect(WIDTH * 0.3, HEIGHT * 0.03,
                                          WIDTH * 0.5, HEIGHT * 0.75))
         textBrowser_00.hide()
@@ -279,7 +274,7 @@ class Ui_chatWindow(object):
         textBrowser_01 = QtWidgets.QTextBrowser(Form)
         textBrowser_01.setObjectName("conversation_rightbar_" + userid)
         textBrowser_01.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
         textBrowser_01.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.03,
                                          WIDTH * 0.15, HEIGHT * 0.75))
         textBrowser_01.hide()
@@ -287,7 +282,7 @@ class Ui_chatWindow(object):
         textEdit_10 = QtWidgets.QTextEdit(Form)
         textEdit_10.setObjectName("conversation_input_"+userid)
         textEdit_10.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
         textEdit_10.setGeometry(QRect(WIDTH * 0.3, HEIGHT * 0.8,
                                       WIDTH * 0.5, HEIGHT * 0.18))
         textEdit_10.hide()
@@ -295,23 +290,23 @@ class Ui_chatWindow(object):
         pushButton_11 = QtWidgets.QPushButton(Form)
         pushButton_11.setObjectName("conversation_pushButton_" + userid)
         pushButton_11.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
         pushButton_11.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.84,
                                         WIDTH * 0.15, HEIGHT * 0.14))
-        pushButton_11.setText(_translate("Form", "ENTER"))
+        pushButton_11.setText(_translate("Form", "发送消息"))
         pushButton_11.setCursor(Qt.OpenHandCursor)
         pushButton_11.hide()
 
         uploadButton = QtWidgets.QPushButton(Form)
         uploadButton.setObjectName("conversation_uploadButton_0")
         uploadButton.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(255,255,255,{0})'.format(opacity),
+            'background-color': 'rgba(200,200,200,{0})'.format(opacity),
             'border-radius': '6px'}))
         uploadButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.80,
                                        WIDTH * 0.15, HEIGHT * 0.03))
         uploadButton.setCursor(Qt.OpenHandCursor)
         uploadButton.clicked.connect(self.upload_file)
-        uploadButton.setText(_translate("Form", "UPLOAD FILE"))
+        uploadButton.setText(_translate("Form", "上传文件"))
         uploadButton.hide()
 
         icon_btn_0 = QtWidgets.QPushButton(self.Form)
@@ -341,7 +336,7 @@ class Ui_chatWindow(object):
         textBrowser_00 = QtWidgets.QTextBrowser(Form)
         textBrowser_00.setObjectName("groupchat_" + groupid)
         textBrowser_00.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity)}))
         textBrowser_00.setGeometry(QRect(WIDTH * 0.3, HEIGHT * 0.03,
                                          WIDTH * 0.5, HEIGHT * 0.75))
         textBrowser_00.hide()
@@ -349,7 +344,7 @@ class Ui_chatWindow(object):
         textBrowser_01 = QtWidgets.QTextBrowser(Form)
         textBrowser_01.setObjectName("groupchat_rightbar_" + groupid)
         textBrowser_01.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity)}))
         textBrowser_01.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.03,
                                          WIDTH * 0.15, HEIGHT * 0.75))
         textBrowser_01.hide()
@@ -357,7 +352,7 @@ class Ui_chatWindow(object):
         textEdit_10 = QtWidgets.QTextEdit(Form)
         textEdit_10.setObjectName("groupchat_input_" + groupid)
         textEdit_10.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity)}))
         textEdit_10.setGeometry(QRect(WIDTH * 0.3, HEIGHT * 0.8,
                                       WIDTH * 0.5 , HEIGHT * 0.18))
         textEdit_10.hide()
@@ -365,28 +360,29 @@ class Ui_chatWindow(object):
         pushButton_11 = QtWidgets.QPushButton(Form)
         pushButton_11.setObjectName("groupchat_pushButton_" + groupid)
         pushButton_11.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity)}))
         pushButton_11.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.84,
                                         WIDTH * 0.15, HEIGHT * 0.14))
-        pushButton_11.setText(_translate("Form", "ENTER"))
+        pushButton_11.setText(_translate("Form", "发送消息"))
         pushButton_11.setCursor(Qt.OpenHandCursor)
         pushButton_11.hide()
 
         uploadButton = QtWidgets.QPushButton(Form)
         uploadButton.setObjectName("groupchat_uploadButton_" + groupid)
         uploadButton.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(255,255,255,{0})'.format(opacity),
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity),
             'border-radius': '6px'}))
         uploadButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.80,
                                        WIDTH * 0.15, HEIGHT * 0.03))
         uploadButton.setCursor(Qt.OpenHandCursor)
         uploadButton.clicked.connect(self.upload_file)
-        uploadButton.setText(_translate("Form", "UPLOAD FILE"))
+        uploadButton.setText(_translate("Form", "上传文件"))
         uploadButton.hide()
 
         leftButton = QtWidgets.QPushButton(Form)
         leftButton.setObjectName("groupchat_leftButton_" + groupid)
-        leftButton.setStyleSheet(gen_style(default_style))
+        leftButton.setStyleSheet(gen_style(default_style, {
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity)}))
         leftButton.setGeometry(QRect(WIDTH * 0.85, HEIGHT * 0.75,
                                      WIDTH * 0.05, HEIGHT * 0.02))
         leftButton.setCursor(Qt.OpenHandCursor)
@@ -396,7 +392,8 @@ class Ui_chatWindow(object):
 
         rightButton = QtWidgets.QPushButton(Form)
         rightButton.setObjectName("groupchat_rightButton_" + groupid)
-        rightButton.setStyleSheet(gen_style(default_style))
+        rightButton.setStyleSheet(gen_style(default_style, {
+            'background-color': 'rgba(180,180,180,{0})'.format(opacity)}))
         rightButton.setGeometry(QRect(WIDTH * 0.92, HEIGHT * 0.75,
                                       WIDTH * 0.05, HEIGHT * 0.02))
         rightButton.setCursor(Qt.OpenHandCursor)

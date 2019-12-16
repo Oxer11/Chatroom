@@ -58,9 +58,14 @@ SENDGROUPMSG_SUCCESS = 120
 SENDGROUPMSG_ERROR = 121
 
 # File Path
-background_path = "./images/star.jpg"
-register_path = "./images/tiancao.png"
-newgroup_path = register_path
+background_path = "./images/log_bg.jpg"
+register_path = "./images/reg_bg.jpeg"
+newgroup_path = "./images/new_group_bg.jpeg"
 tiancao_path = "./images/tiancao.png"
+chatbar_path = "./images/chatbar_bg.jpeg"
+chatboard_path = "./images/chatboard_bg.jpg"
+filepage_path = "./images/FILE.png"
+groupicon_path = "./images/group_icon.jpg"
+public_icon_path = "./images/PUBLIC.png"
 star_path = "./images/little_star.png"
 darkstar_path = "./images/dark_star.png"

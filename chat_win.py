@@ -80,7 +80,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             page += [item.icon, item.userid]
         self.conv_pages.append(page)
         self.conv_pages.append(file_page)
-        self.conv_list.append(ConvEntry('PUBLIC', star_path, 0))
+        self.conv_list.append(ConvEntry('PUBLIC', public_icon_path, 0))
         self.conv_list.append(ConvEntry('FILE', filepage_path, 0))
         self.conv_people.append('PUBLIC')
         self.conv_people.append('FILE')
@@ -135,13 +135,13 @@ class ChatPage(QWidget, Ui_chatWindow):
         openfile_name = QFileDialog.getOpenFileName(self, '选择文件', '')
         id = self.cur_pageid
         if id == 0:
-            self.APPEND.emit('I upload file:\n' + openfile_name[0])
+            self.APPEND.emit('<pre><em>I upload file:</em>\n' + openfile_name[0] + '</pre>')
             send_file_all(self.sock, openfile_name[0])
         elif self.conv_type[id] == 'private':
-            self.conv_pages[id][0].append('I upload file:\n' + openfile_name[0])
+            self.conv_pages[id][0].append('<pre><em>I upload file:</em>\n' + openfile_name[0] + '</pre>')
             send_file(self.sock, [self.conv_list[id].name], openfile_name[0])
         else:
-            self.conv_pages[id][0].append('I say:\n' + openfile_name[0])
+            self.conv_pages[id][0].append('<pre><em>I say:</em>\n' + openfile_name[0] + '</pre>')
             group_id = self.conv_list[id].name
             chat_index = self.conv_people.index(group_id)
             send_file_group(self.sock, group_id, [x[0] for x in self.grp_user_list[chat_index]], openfile_name[0])
@@ -158,15 +158,15 @@ class ChatPage(QWidget, Ui_chatWindow):
         id = self.cur_pageid
         if id == 0:
             data = self.textEdit.toPlainText()
-            self.APPEND.emit('I say:\n' + data)
+            self.APPEND.emit('<pre><em>I say:</em>\n' + data + '</pre>')
             send_all(self.sock, data)
         elif self.conv_type[id] == 'private':
             data = self.conv_pages[id][2].toPlainText()
-            self.conv_pages[id][0].append('I say:\n' + data)
+            self.conv_pages[id][0].append('<pre><em>I say:</em>\n' + data + '</pre>')
             send_msg(self.sock, [self.conv_list[id].name], data)
         else:
             data = self.conv_pages[id][2].toPlainText()
-            self.conv_pages[id][0].append('I say:\n' + data)
+            self.conv_pages[id][0].append('<pre><em>I say:</em>\n' + data + '</pre>')
             group_id = self.conv_list[id].name
             chat_index = self.conv_people.index(group_id)
             send_group_msg(self.sock, group_id, [x[0] for x in self.grp_user_list[chat_index]], data)
@@ -199,7 +199,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             self.chatlist[chat_index].num_msg.setText(
                 QtCore.QCoreApplication.translate("Form", ' {0}'.format(self.conv_list[chat_index].num_msg)))
 
-        self.conv_pages[chat_index][0].append(user + msg)
+        self.conv_pages[chat_index][0].append('<pre><em>' + user + msg)
 
     def new_group_msg(self, user, groupid, msg):
         chat_index = self.conv_people.index(groupid)
@@ -208,7 +208,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             self.chatlist[chat_index].num_msg.setText(
                 QtCore.QCoreApplication.translate("Form", ' {0}'.format(self.conv_list[chat_index].num_msg)))
 
-        self.conv_pages[chat_index][0].append(user + msg)
+        self.conv_pages[chat_index][0].append('<pre><em>' + user + msg)
 
     def delete_conversation(self):
         sender = self.sender()
@@ -239,7 +239,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             self.userlist[i].username = ''
             self.userlist[i].hide()
 
-        self.user_peoplelist = [['PUBLIC', star_path]]
+        self.user_peoplelist = [['PUBLIC', public_icon_path]]
         if data is not None:
             self.users = data.split('\n')  # 希望保存这个数据
 
@@ -252,7 +252,7 @@ class ChatPage(QWidget, Ui_chatWindow):
 
         log_out_user = None
         for i, item in enumerate(self.conv_list):
-            if i != 0 and i != 1 and item.name not in self.users and item.name not in self.conv_people:
+            if i != 0 and i != 1 and item.name not in self.users and item.name[:3] != 'gp_':
                 print(item.name, self.users)
                 log_out_user = i
         if log_out_user is not None:

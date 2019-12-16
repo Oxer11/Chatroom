@@ -64,7 +64,7 @@ class Ui_registerWindow(object):
         font.setPointSize(16)
         self.id.setFont(font)
         self.id.setObjectName("id")
-        self.id.setStyleSheet('color: #FFFFFF;font-weight:24;')
+        self.id.setStyleSheet('color: black;font-weight:bold;')
 
         self.password = QtWidgets.QLabel(self.frame)
         self.password.setGeometry(QRect(REG_WIDTH * 0.067, REG_HEIGHT * 0.22,
@@ -72,32 +72,35 @@ class Ui_registerWindow(object):
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
         font.setPointSize(16)
-        self.password.setStyleSheet('color: #FFFFFF;font-weight:24;')
+        self.password.setStyleSheet('color: black;font-weight:bold;')
         self.password.setFont(font)
         self.password.setObjectName("password")
 
         default_style = {'border-radius': '10px',
-                         'background-color': 'rgba(255,255,255,126)',
+                         'background-color': 'rgba(150,150,150,126)',
                          'font-size': '16px',
                          'font-weight': 'bold',
-                         'color': 'white',
+                         'color': 'black',
                          'font-family': 'Comic Sans MS'}
 
         self.id_box = QtWidgets.QLineEdit(self.frame)
         self.id_box.setObjectName("id_box")
         self.id_box.setStyleSheet(gen_style(default_style))
         self.id_box.setGeometry(QRect(REG_WIDTH * 0.19, REG_HEIGHT * 0.12,
-                                        REG_WIDTH * 0.55, REG_HEIGHT * 0.07))
+                                      REG_WIDTH * 0.55, REG_HEIGHT * 0.07))
+        self.id_box.setPlaceholderText(" 3~10位，数字或字母")
 
         self.password_box = QtWidgets.QLineEdit(self.frame)
         self.password_box.setObjectName("password_box")
         self.password_box.setStyleSheet(gen_style(default_style))
         self.password_box.setGeometry(QRect(REG_WIDTH * 0.19, REG_HEIGHT * 0.24,
                                             REG_WIDTH * 0.55, REG_HEIGHT * 0.07))
+        self.password_box.setEchoMode(QLineEdit.Password)
+        self.password_box.setPlaceholderText(" 6~15位，数字或字母")
 
         self.register_button = QtWidgets.QPushButton(self.frame)
         self.register_button.setObjectName("register_button")
-        self.register_button.setStyleSheet(gen_style(default_style, {'font-weight': '20px'}))
+        self.register_button.setStyleSheet(gen_style(default_style, {'font-weight': 'bold'}))
         self.register_button.setGeometry(QRect(REG_WIDTH * 0.78, REG_HEIGHT * 0.12,
                                                 REG_WIDTH * 0.2, REG_HEIGHT * 0.19))
 
@@ -133,7 +136,7 @@ class Ui_registerWindow(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.id.setText(_translate("Form", "账号"))
         self.password.setText(_translate("Form", "密码"))
-        self.register_button.setText(_translate("Form", "Register"))
+        self.register_button.setText(_translate("Form", "注册"))
 
 
 class RegisterPage(QWidget, Ui_registerWindow):

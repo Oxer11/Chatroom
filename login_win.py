@@ -63,7 +63,7 @@ class Ui_loginWindow(object):
         font.setPointSize(16)
         self.id.setFont(font)
         self.id.setObjectName("id")
-        self.id.setStyleSheet('color: #FFFFFF;font-weight:24;')
+        self.id.setStyleSheet('color: black;font-weight:bold;')
 
         self.password = QtWidgets.QLabel(self.frame)
         self.password.setGeometry(QRect(LOG_WIDTH * .067, LOG_HEIGHT * .22,
@@ -71,15 +71,15 @@ class Ui_loginWindow(object):
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
         font.setPointSize(16)
-        self.password.setStyleSheet('color: #FFFFFF;font-weight:24;')
+        self.password.setStyleSheet('color: black;font-weight:bold;')
         self.password.setFont(font)
         self.password.setObjectName("password")
 
         default_style = {'border-radius': '10px',
-                         'background-color': 'rgba(255,255,255,126)',
+                         'background-color': 'rgba(150,150,150,126)',
                          'font-size': '16px',
                          'font-weight': 'bold',
-                         'color': 'white',
+                         'color': 'black',
                          'font-family': 'Comic Sans MS'}
 
         self.id_box = QtWidgets.QLineEdit(self.frame)
@@ -93,6 +93,7 @@ class Ui_loginWindow(object):
         self.password_box.setStyleSheet(gen_style(default_style))
         self.password_box.setGeometry(QRect(LOG_WIDTH * .19, LOG_HEIGHT * .24,
                                             LOG_WIDTH * .55, LOG_HEIGHT * .07))
+        self.password_box.setEchoMode(QLineEdit.Password)
 
         self.login_button = QtWidgets.QPushButton(self.frame)
         self.login_button.setObjectName("login_button")
@@ -138,8 +139,8 @@ class Ui_loginWindow(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.id.setText(_translate("Form", "账号"))
         self.password.setText(_translate("Form", "密码"))
-        self.login_button.setText(_translate("Form", "Login"))
-        self.register_button.setText(_translate("Form", "Register"))
+        self.login_button.setText(_translate("Form", "登录"))
+        self.register_button.setText(_translate("Form", "注册"))
 
 
 class LoginPage(QWidget, Ui_loginWindow):

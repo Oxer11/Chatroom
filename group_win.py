@@ -8,7 +8,7 @@ GROUP_HEIGHT = 300
 GROUP_WIDTH = 425
 
 default_style = {'border-radius': '10px',
-                 'background-color': 'rgba(255,255,255,126)',
+                 'background-color': 'rgba(150,150,150,126)',
                  'font-size': '16px',
                  'font-weight': 'bold',
                  'color': 'black',
@@ -94,7 +94,7 @@ class Ui_newgroupWindow(object):
 	def retranslateUi(self, Form):
 		_translate = QtCore.QCoreApplication.translate
 		Form.setWindowTitle(_translate("Form", "Form"))
-		self.createNewGroup_button.setText(_translate("Form", "Enter \nGroup!"))
+		self.createNewGroup_button.setText(_translate("Form", "加入 \n群聊!"))
 
 
 class NewGroupPage(QWidget, Ui_newgroupWindow):
@@ -118,7 +118,6 @@ class NewGroupPage(QWidget, Ui_newgroupWindow):
 
 	def createNewGroup(self):
 		self.groupid = 'gp_' + self.groupid_box.text()
-		# self.owner.new_group(self.groupid)
 		self.CLOSE.emit()
 		send(self.sock, '\r\n'.join([str(NEWGROUP), self.groupid]))
 

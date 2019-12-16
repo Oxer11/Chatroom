@@ -47,14 +47,14 @@ def listener():
                     ui_chat.APPEND.emit(data[1] + ' has logged out!')
                     ask_users(sock)
                 elif op == SEND_ALL:
-                    ui_chat.APPEND.emit(data[1] + ' says:\n' + data[2])
+                    ui_chat.APPEND.emit('<pre><em>' + data[1] + ' says:</em>\n' + data[2] + '</pre>')
                 elif op == SEND_PER:
-                    ui_chat.new_conv.emit(data[1], ' says:\n' + data[2])
+                    ui_chat.new_conv.emit(data[1], ' says:</em>\n' + data[2] + '</pre>')
                 elif op == SENDFILE_ALL:
-                    ui_chat.APPEND.emit(data[1] + ' uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
+                    ui_chat.APPEND.emit('<pre><em>' + data[1] + ' uploads a file:</em>' + data[2] + '\n<em>size:</em>' + data[3] + '</pre>')
                     ui_chat.new_file.emit(data[1], data[2], data[3])
                 elif op == SENDFILE_PER:
-                    ui_chat.new_conv.emit(data[1], ' uploads a file:\n' + data[2] + '\nsize:\n' + data[3])
+                    ui_chat.new_conv.emit(data[1], ' uploads a file:</em>' + data[2] + '\n<em>size:</em>' + data[3] + '</pre>')
                     ui_chat.new_file.emit(data[1], data[2], data[3])
                 elif op == ASKUSERS_RET:
                     ui_chat.ask_users.emit((data[2]+'\n')*1)
@@ -75,13 +75,13 @@ def listener():
                 elif op == ASKGROUPUSERS_RET:
                     ui_chat.ASK_GROUP_USERS.emit(data[1], data[2])
                 elif op == SENDGROUPMSG_SUCCESS:
-                    ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' says:\n' + data[3])
+                    ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' says:</em>\n' + data[3])
                 elif op == GROUP_LOGIN:
                     ui_chat.NEW_GROUP_USER.emit(data[1], data[2])
                 elif op == GROUP_LOGOUT:
                     ui_chat.OUT_GROUP_USER.emit(data[1], data[2])
                 elif op == SENDFILE_GROUP:
-                    ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' uploads a file:\n' + data[3] + '\nsize:\n' + data[4])
+                    ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' uploads a file:</em>' + data[3] + '\n<em>size:</em>' + data[4])
                     ui_chat.new_file.emit(data[1], data[3], data[4])
             except Exception as e:
                 print(e)
