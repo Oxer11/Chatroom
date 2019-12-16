@@ -4,6 +4,7 @@ from chat_ui import *
 
 
 class ChatPage(QWidget, Ui_chatWindow):
+    FLUSH = QtCore.pyqtSignal()
     APPEND = QtCore.pyqtSignal(str)
     new_conv = QtCore.pyqtSignal(str, str)
     new_file = QtCore.pyqtSignal(str, str, str)
@@ -37,6 +38,7 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.sock = sock
         self.ask_users.connect(self.update_userlist)
         self.SHOW.connect(self.show)
+        self.FLUSH.connect(self.flush)
         self.APPEND.connect(self.public_append)
         self.new_conv.connect(self.new_conversation)
         self.new_file.connect(self.receive_new_file)
@@ -50,6 +52,7 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.pushButton.clicked.connect(self.SEND)
         self.pushButton.clicked.connect(self.textEdit.clear)
         self.uploadButton.clicked.connect(self.upload_file)
+        self.uploadButton1.clicked.connect(self.upload_photo)
         self.leftButton.clicked.connect(self.last_page)
         self.rightButton.clicked.connect(self.next_page)
         for item in self.userlist:
@@ -72,7 +75,7 @@ class ChatPage(QWidget, Ui_chatWindow):
 
         self.cur_pageid = 0
         page = [self.textBrowser_2, self.textBrowser, self.textEdit, self.pushButton,
-                self.uploadButton, self.leftButton, self.rightButton]
+                self.uploadButton, self.uploadButton1, self.leftButton, self.rightButton]
         file_page = []
         for tup in self.filelist:
             file_page += [tup.icon, tup.userid, tup.name, tup.ac, tup.re]
@@ -90,6 +93,9 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.userpage_index = 1
         self.newgroupButton.clicked.connect(self.find_newgroup)
         self.new_groupWindow = NewGroupPage(self.sock)
+
+    def flush(self):
+        self.update_userlist()
 
     def group_logout(self):
         sender = self.sender()
@@ -131,20 +137,26 @@ class ChatPage(QWidget, Ui_chatWindow):
                 self.grp_page[chat_index] += 1
                 self.update_group_userlist(chat_index)
 
+    def upload_photo(self):
+        openfile_name = QFileDialog.getOpenFileName(self, '选择文件', '')
+        pre = str(UPPHOTO)
+        send_file(self.sock, pre, openfile_name[0])
+
     def upload_file(self):
         openfile_name = QFileDialog.getOpenFileName(self, '选择文件', '')
         id = self.cur_pageid
         if id == 0:
             self.APPEND.emit('<pre><em>I upload file:</em>\n' + openfile_name[0] + '</pre>')
-            send_file_all(self.sock, openfile_name[0])
+            pre = str(SENDFILEALL)
         elif self.conv_type[id] == 'private':
             self.conv_pages[id][0].append('<pre><em>I upload file:</em>\n' + openfile_name[0] + '</pre>')
-            send_file(self.sock, [self.conv_list[id].name], openfile_name[0])
+            pre = str(SENDFILE) + '\r\n' + self.conv_list[id].name
         else:
             self.conv_pages[id][0].append('<pre><em>I say:</em>\n' + openfile_name[0] + '</pre>')
             group_id = self.conv_list[id].name
             chat_index = self.conv_people.index(group_id)
-            send_file_group(self.sock, group_id, [x[0] for x in self.grp_user_list[chat_index]], openfile_name[0])
+            pre = '\r\n'.join([str(SENDFILEGROUP), group_id, '\t'.join([x[0] for x in self.grp_user_list[chat_index]])])
+        send_file(self.sock, pre, openfile_name[0])
 
     def receive_new_file(self, user, filename, filesize):
         self.filedata_list.append([user, filename, filesize])
@@ -421,9 +433,8 @@ class ChatPage(QWidget, Ui_chatWindow):
         page_type = self.conv_type[chat_index]
 
         if page_type == 'public':
-            for item in self.conv_pages[chat_index][:7]:
+            for item in self.conv_pages[chat_index]:
                 item.show()
-            print(self.user_peoplelist)
             for items in self.userlist[:len(self.user_peoplelist) - 1]:
                 items.show()
         elif page_type == 'file':
@@ -487,7 +498,8 @@ class ChatPage(QWidget, Ui_chatWindow):
         self.textBrowser.setGeometry(QRect(width * 0.83, height * 0.03, width * 0.15, height * 0.75))
         self.textEdit.setGeometry(QRect(width * 0.3, height * 0.8, width * 0.5, height * 0.18))
         self.pushButton.setGeometry(QRect(width * 0.83, height * 0.84, width * 0.15, height * 0.14))
-        self.uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.15, height * 0.03))
+        self.uploadButton.setGeometry(QRect(width * 0.83, height * 0.80, width * 0.07, height * 0.03))
+        self.uploadButton1.setGeometry(QRect(width * 0.91, height * 0.80, width * 0.07, height * 0.03))
         self.leftButton.setGeometry(QRect(width * 0.85, height * 0.75, width * 0.05, height * 0.02))
         self.rightButton.setGeometry(QRect(width * 0.92, height * 0.75, width * 0.05, height * 0.02))
 

@@ -36,6 +36,16 @@ def receive_file(s, data):
     return file_name, file_size, cur_data
 
 
+def send_file_all(sock, file_path):
+    file_name = os.path.basename(file_path)
+    file_size = os.stat(file_path).st_size
+    if file_size > max_file_size: return
+    with open(file_path, "rb") as f:
+        content = f.read()
+    send_data = '\r\n'.join([str(SENDFILEALL), file_name, str(file_size)]) + chr(0) + chr(0)
+    send(sock, send_data, content)
+
+
 def send_file(sock, pre, file_path):
     file_name = os.path.basename(file_path)
     file_size = os.stat(file_path).st_size
@@ -44,6 +54,18 @@ def send_file(sock, pre, file_path):
         content = f.read()
     send_data = '\r\n'.join([pre, file_name, str(file_size)]) + chr(0) + chr(0)
     send(sock, send_data, content)
+
+
+def send_file_group(sock, groupid, receiver, file_path):
+    file_name = os.path.basename(file_path)
+    file_size = os.stat(file_path).st_size
+    if file_size > max_file_size:
+        return False
+    with open(file_path, "rb") as f:
+        content = f.read()
+    send_data = '\r\n'.join([str(SENDFILEGROUP), groupid, '\t'.join(receiver), file_name, str(file_size)]) + chr(0) + chr(0)
+    send(sock, send_data, content)
+    return True
 
 
 def send_msg(sock, receiver, data):

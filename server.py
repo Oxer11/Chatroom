@@ -224,6 +224,17 @@ def group_log_out(sender, data):
             time.sleep(1)
 
 
+def up_photo(sender, data):
+    file_name, file_size, cur_data = receive_file(sender, data)
+    path = "./server/photo/{0}.png".format(conn2user[sender])
+    with open(path, "wb") as f:
+        f.write(cur_data)
+    for s in connections:
+        if s != sock:
+            s.sendall(('\r\n'.join([str(UP_PHOTO), file_name, str(file_size)])
+                       + chr(0) + chr(0)).encode('utf-8') + cur_data)
+
+
 handle_dic = {LOGIN: log_in,
               REGISTER: register,
               SENDMSG: send_msg,
@@ -238,7 +249,8 @@ handle_dic = {LOGIN: log_in,
               ASKGROUPUSERS: ask_group_users,
               SENDGROUPMSG: send_group_msg,
               GROUPLOGOUT: group_log_out,
-              SENDFILEGROUP: send_file_group}
+              SENDFILEGROUP: send_file_group,
+              UPPHOTO: up_photo}
 
 
 def handle(s, data):  # 处理收到的信息
@@ -246,7 +258,7 @@ def handle(s, data):  # 处理收到的信息
     try:
         if int(sec[0]) in [SENDFILEALL, SENDFILE]:
             handle_dic[int(sec[0])](s, data[3:])
-        elif int(sec[0]) == SENDFILEGROUP:
+        elif int(sec[0]) in [SENDFILEGROUP, UPPHOTO]:
             handle_dic[int(sec[0])](s, data[4:])
         else:
             sec = data.decode('utf-8').split('\r\n')

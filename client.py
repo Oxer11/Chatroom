@@ -25,11 +25,11 @@ def listener():
             try:
                 recv_data = s.recv(BUFFER_SIZE)
                 op = int(recv_data[:3].decode('utf-8'))
-                print(recv_data.decode('utf-8'))
-                if op != DOWNFILE_SUCCESS:
-                    data = recv_data.decode('utf-8').split('\r\n')
-                else:
+                if op in [DOWNFILE_SUCCESS, UP_PHOTO]:
                     data = recv_data[5:]
+                else:
+                    data = recv_data.decode('utf-8').split('\r\n')
+                print(op)
                 if op == LOGIN_SUCCESS:
                     ui_chat.setClientId(ui_login.clientId)
                     ui_login.CLOSE.emit()
@@ -37,9 +37,9 @@ def listener():
                     ui_chat.SHOW.emit()
                     ask_users(sock)
                 elif op == LOGIN_WRONG:
-                    print('Login Error')
+                    ui_login.ERROR.emit('用户名或密码错误！')
                 elif op == LOGIN_REPEAT:
-                    print('Login Repeat')
+                    ui_login.ERROR.emit('重复登录！')
                 elif op == LOGIN_INFO:
                     ui_chat.APPEND.emit(data[1] + ' has logged in!')
                     ask_users(sock)
@@ -83,6 +83,12 @@ def listener():
                 elif op == SENDFILE_GROUP:
                     ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' uploads a file:</em>' + data[3] + '\n<em>size:</em>' + data[4])
                     ui_chat.new_file.emit(data[1], data[3], data[4])
+                elif op == UP_PHOTO:
+                    file_name, file_size, cur_data = receive_file(s, data)
+                    path = "./client/photo/{0}.png".format(ui_chat.clientId)
+                    with open(path, "wb") as f:
+                        f.write(cur_data)
+                    ui_chat.FLUSH.emit()
             except Exception as e:
                 print(e)
                 return

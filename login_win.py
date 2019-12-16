@@ -145,6 +145,7 @@ class Ui_loginWindow(object):
 
 class LoginPage(QWidget, Ui_loginWindow):
     CLOSE = QtCore.pyqtSignal()
+    ERROR = QtCore.pyqtSignal(str)
 
     def __init__(self, sock, parent=None):
         super(LoginPage, self).__init__(parent)
@@ -152,6 +153,8 @@ class LoginPage(QWidget, Ui_loginWindow):
 
         self.sock = sock
         self.ui_register = RegisterPage(self.sock)
+
+        self.ERROR.connect(self.error_msg)
 
         self.CLOSE.connect(self.close)
         self.CLOSE.connect(self.ui_register.close)
@@ -166,6 +169,9 @@ class LoginPage(QWidget, Ui_loginWindow):
         self.register_button.clicked.connect(self.show_registerWindow)
 
         self.close_button.clicked.connect(self.CLOSE)
+
+    def error_msg(self, msg):
+        QMessageBox.warning(self, 'warning', msg)
 
     def log_in(self):
         username = self.id_box.text()

@@ -14,6 +14,7 @@ ASKGROUPUSERS = 11
 SENDGROUPMSG = 12
 GROUPLOGOUT = 13
 SENDFILEGROUP = 14
+UPPHOTO = 15
 
 
 # server response
@@ -57,7 +58,10 @@ ASKGROUPUSERS_RET = 110
 SENDGROUPMSG_SUCCESS = 120
 SENDGROUPMSG_ERROR = 121
 
+UP_PHOTO = 150
+
 # File Path
+photo_base_path = "./client/photo/"
 background_path = "./images/log_bg.jpg"
 register_path = "./images/reg_bg.jpeg"
 newgroup_path = "./images/new_group_bg.jpeg"

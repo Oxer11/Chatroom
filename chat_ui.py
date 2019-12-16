@@ -10,7 +10,6 @@ CHAT_WIDTH = 913
 MAX_USER = 10
 MAX_CHAT = 10
 MAX_FILE = 10
-photo_base_path = "./images/photo/"
 cgitb.enable(format = 'text')
 kyogre_path = "./images/kyogre-primal.png"
 
@@ -96,9 +95,17 @@ class Ui_chatWindow(object):
         self.uploadButton.setObjectName("conversation_uploadButton_0")
         self.uploadButton.setStyleSheet(gen_style(default_style, {'border-radius':'6px'}))
         self.uploadButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.80,
-                                            WIDTH * 0.15, HEIGHT * 0.03))
+                                            WIDTH * 0.07, HEIGHT * 0.03))
         self.uploadButton.setCursor(Qt.OpenHandCursor)
         self.uploadButton.setText(_translate("Form", "上传文件"))
+
+        self.uploadButton1 = QtWidgets.QPushButton(Form)
+        self.uploadButton1.setObjectName("conversation_uploadButton_1")
+        self.uploadButton1.setStyleSheet(gen_style(default_style, {'border-radius': '6px'}))
+        self.uploadButton1.setGeometry(QRect(WIDTH * 0.91, HEIGHT * 0.80,
+                                             WIDTH * 0.07, HEIGHT * 0.03))
+        self.uploadButton1.setCursor(Qt.OpenHandCursor)
+        self.uploadButton1.setText(_translate("Form", "上传头像"))
 
         self.leftButton = QtWidgets.QPushButton(Form)
         self.leftButton.setObjectName("conversation_leftButton_0")
@@ -180,7 +187,7 @@ class Ui_chatWindow(object):
                 'color': 'white'}))
             num_msg_label.setGeometry(QRect(WIDTH * 0.23, HEIGHT * (0.063 + i * WIDTH/HEIGHT * 0.06),
                                             WIDTH * 0.03, WIDTH * 0.03))
-            num_msg_label.setText(_translate("Form", ' 0'))
+            num_msg_label.setText(_translate("Form", '  0'))
 
             close_btn = QtWidgets.QPushButton(self.Form)
             close_btn.setObjectName("chat_close_{0}".format(i))
@@ -434,3 +441,11 @@ class Ui_chatWindow(object):
 
         return items, userlist
 
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', '是否确定要退出？',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
