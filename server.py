@@ -231,7 +231,7 @@ def up_photo(sender, data):
         f.write(cur_data)
     for s in connections:
         if s != sock:
-            s.sendall(('\r\n'.join([str(UP_PHOTO), file_name, str(file_size)])
+            s.sendall(('\r\n'.join([str(UP_PHOTO), conn2user[sender], file_name, str(file_size)])
                        + chr(0) + chr(0)).encode('utf-8') + cur_data)
 
 

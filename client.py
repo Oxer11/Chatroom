@@ -84,8 +84,10 @@ def listener():
                     ui_chat.NEW_GROUP_MSG.emit(data[1], data[2], ' uploads a file:</em>' + data[3] + '\n<em>size:</em>' + data[4])
                     ui_chat.new_file.emit(data[1], data[3], data[4])
                 elif op == UP_PHOTO:
+                    sep = data.find('\r\n'.encode('utf-8'))
+                    user, data = data[:sep].decode('utf-8'), data[sep+2:]
                     file_name, file_size, cur_data = receive_file(s, data)
-                    path = "./client/photo/{0}.png".format(ui_chat.clientId)
+                    path = "./client/photo/{0}.png".format(user)
                     with open(path, "wb") as f:
                         f.write(cur_data)
                     ui_chat.FLUSH.emit()

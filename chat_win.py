@@ -237,6 +237,7 @@ class ChatPage(QWidget, Ui_chatWindow):
             del self.grp_user_list[btn_idx]
             del self.grp_page[btn_idx]
         for chat_idx in self.grp_page.copy():
+            if chat_idx < btn_idx: continue
             self.grp_page[chat_idx-1] = self.grp_page[chat_idx]
             self.grp_userbtn_list[chat_idx-1] = self.grp_userbtn_list[chat_idx]
             self.grp_user_list[chat_idx-1] = self.grp_user_list[chat_idx]
