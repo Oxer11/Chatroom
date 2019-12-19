@@ -16,7 +16,7 @@ kyogre_path = "./images/kyogre-primal.png"
 
 opacity = 210
 default_style = {'border-radius': '10px',
-                 'background-color': 'rgba(160,160,160,{0})'.format(opacity),
+                 'background-color': 'rgba(255,255,255,{0})'.format(opacity),
                  'font-size': '16px',
                  'font-weight': 'bold',
                  'color': 'black',
@@ -93,7 +93,7 @@ class Ui_chatWindow(object):
 
         self.uploadButton = QtWidgets.QPushButton(Form)
         self.uploadButton.setObjectName("conversation_uploadButton_0")
-        self.uploadButton.setStyleSheet(gen_style(default_style, {'border-radius':'6px'}))
+        self.uploadButton.setStyleSheet(gen_style(default_style, {'border-radius':'6px','font-size':'14px'}))
         self.uploadButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.80,
                                             WIDTH * 0.07, HEIGHT * 0.03))
         self.uploadButton.setCursor(Qt.OpenHandCursor)
@@ -101,7 +101,7 @@ class Ui_chatWindow(object):
 
         self.uploadButton1 = QtWidgets.QPushButton(Form)
         self.uploadButton1.setObjectName("conversation_uploadButton_1")
-        self.uploadButton1.setStyleSheet(gen_style(default_style, {'border-radius': '6px'}))
+        self.uploadButton1.setStyleSheet(gen_style(default_style, {'border-radius': '6px','font-size':'14px'}))
         self.uploadButton1.setGeometry(QRect(WIDTH * 0.91, HEIGHT * 0.80,
                                              WIDTH * 0.07, HEIGHT * 0.03))
         self.uploadButton1.setCursor(Qt.OpenHandCursor)
@@ -273,7 +273,7 @@ class Ui_chatWindow(object):
         textBrowser_00 = QtWidgets.QTextBrowser(Form)
         textBrowser_00.setObjectName("conversation_" + userid)
         textBrowser_00.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
+                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
         textBrowser_00.setGeometry(QRect(WIDTH * 0.3, HEIGHT * 0.03,
                                          WIDTH * 0.5, HEIGHT * 0.75))
         textBrowser_00.hide()
@@ -281,7 +281,7 @@ class Ui_chatWindow(object):
         textBrowser_01 = QtWidgets.QTextBrowser(Form)
         textBrowser_01.setObjectName("conversation_rightbar_" + userid)
         textBrowser_01.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
+                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
         textBrowser_01.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.03,
                                          WIDTH * 0.15, HEIGHT * 0.75))
         textBrowser_01.hide()
@@ -289,7 +289,7 @@ class Ui_chatWindow(object):
         textEdit_10 = QtWidgets.QTextEdit(Form)
         textEdit_10.setObjectName("conversation_input_"+userid)
         textEdit_10.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
+                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
         textEdit_10.setGeometry(QRect(WIDTH * 0.3, HEIGHT * 0.8,
                                       WIDTH * 0.5, HEIGHT * 0.18))
         textEdit_10.hide()
@@ -297,7 +297,7 @@ class Ui_chatWindow(object):
         pushButton_11 = QtWidgets.QPushButton(Form)
         pushButton_11.setObjectName("conversation_pushButton_" + userid)
         pushButton_11.setStyleSheet(gen_style(default_style, {
-                'background-color': 'rgba(200,200,200,{0})'.format(opacity)}))
+                'background-color': 'rgba(255,255,255,{0})'.format(opacity)}))
         pushButton_11.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.84,
                                         WIDTH * 0.15, HEIGHT * 0.14))
         pushButton_11.setText(_translate("Form", "发送消息"))
@@ -307,7 +307,7 @@ class Ui_chatWindow(object):
         uploadButton = QtWidgets.QPushButton(Form)
         uploadButton.setObjectName("conversation_uploadButton_0")
         uploadButton.setStyleSheet(gen_style(default_style, {
-            'background-color': 'rgba(200,200,200,{0})'.format(opacity),
+            'background-color': 'rgba(255,255,255,{0})'.format(opacity),
             'border-radius': '6px'}))
         uploadButton.setGeometry(QRect(WIDTH * 0.83, HEIGHT * 0.80,
                                        WIDTH * 0.15, HEIGHT * 0.03))
