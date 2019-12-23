@@ -190,7 +190,7 @@
 	\item {\bf 聊天界面个性化设置：} 可通过配置本地文件来修改聊天室的背景、色调等，设置方法是将喜欢的图片放置image文件夹，然后修改Constant.py中的图片背景路径。
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=0.9\linewidth]{figure/demo.png}
+		\includegraphics[width=0.8\linewidth]{figure/demo.png}
 		\caption{聊天界面展示}
 	\end{figure}
 \end{enumerate}
@@ -205,7 +205,7 @@
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.95\linewidth]{figure/client.png}
+	\includegraphics[width=0.9\linewidth]{figure/client.png}
 	\caption{客户端协议}
 \end{figure}
 \vspace*{-1cm}
@@ -304,8 +304,7 @@ PyQt里的动画可以通过类QPropertyAnimation创建，再使用setDuration�
 
 按照功能来说，前端设计中的函数大体可以分为2类，处理数据、请求的函数和控制组件的函数，或者这2类的结合。处理数据的函数以简单的登陆为例，而控制组件的函数以聊天窗的换页为例。少数函数还会触发其他窗体的显示与隐藏，比如“注册”按钮的点击事件，或后端送来的登陆指令（将关闭登录窗口并显示聊天窗口）。
 
-\subsubsubsection{处理数据的函数}
-
+\paragraph{处理数据的函数}
 处理数据的函数逻辑非常简单，以登陆函数为例。在登陆的时候，我们从textEdit输入框组件中获取用户输入的信息（用户名和密码），然后通过socket发送相应的请求给后端。后续后端会对数据进行判断，如果数据符合数据库中的一个账号和密码，那就给本地socket发送登陆成功消息，否则发送登陆不成功消息。注册的逻辑也类似，只不过是向后端发送不一样的请求。更复杂的情况下，我们需要通过self.sender()获取触发事件或发送信号的组件再作出相应响应。比如说，左右两侧的用户id和头像的点击事件都被连接到了change\_page这个函数上，表示点击这些组件时会触发页面的转换。这个时候change\_page函数就需要通过self.sender()获取触发事件的组件，然后从我们对sender设置的名字中获取相关信息，包括类型、序号等，再根据不同的类型作出不同的响应。
 
 \begin{figure}[htbp]
@@ -313,7 +312,7 @@ PyQt里的动画可以通过类QPropertyAnimation创建，再使用setDuration�
 	\includegraphics[width=0.6\linewidth]{figure/fig1.png}
 \end{figure}
 
-\subsubsubsection{控制组件的函数}
+\paragraph{控制组件的函数}
 
 前端设计中的难点在于聊天窗，因为其他框体的组件是固定的，而聊天窗为了实现在不同页面的切换，组件是不固定的；同时，对于不同类型的聊天（公聊、私聊、群聊以及文件传输界面），组件的类型和数目也是不同的，还需要记载组件信息的数据结构，这就要求不同的处理。早期实现时，没有考虑到后面要加的群聊功能，因此代码结构相对简单，这给后期添加功能带来了一些问题，不得不重构代码。
 
