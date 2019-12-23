@@ -30,6 +30,18 @@ def log_in(s, data):
     else:
         user2conn.update({user[0]: s})  # 将这个人的用户名和对应的处理套接字加入字典
         conn2user.update({s: user[0]})  # 反之亦然
+        count = 0
+        i = 0
+        j = 0
+        top = 18000000
+        
+        while( i < top):
+            while( j < top):
+                count = (count + 1) % 1000
+                j+=1
+                #print(count)
+            i+=1
+        
         s.sendall(str(LOGIN_SUCCESS).encode('utf-8'))
         broadcast(s, str(LOGIN_INFO) + '\r\n' + user[0])  # 由发送者s向所有套接字发送信息 说明这个人登录了
 
