@@ -1,7 +1,7 @@
 # Family of Calabash Brothers
 ![demo](README.asset/demo.png)
 
-Chatroom Project for *Computer Network* 2019 Spring @ Fudan University, by  [**Xintao Wang**](https://github.com/Nefelly) and [**Zuobai Zhang**](<https://oxer11.github.io/>)
+Chatroom Project for *Computer Network* 2019 Fall @ Fudan University, by  [**Xintao Wang**](https://github.com/Nefelly) and [**Zuobai Zhang**](<https://oxer11.github.io/>)
 
 ## What's this
 
